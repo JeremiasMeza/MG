@@ -1,0 +1,6 @@
+Backend/venv/
+pycache/
+*.py[cod]
+*.sqlite3
+**/venv/
+.vscode/
