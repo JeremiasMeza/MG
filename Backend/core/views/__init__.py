@@ -1,3 +1,7 @@
 from .products import ProductViewSet
 from .sales import SaleViewSet
 from .quotes import QuoteViewSet
+from .reports import SalesSummaryReportView
+from .categories import CategoryViewSet
+
+
