@@ -4,4 +4,4 @@ pycache/
 *.sqlite3
 **/venv/
 .vscode/
-**.env
+Backend/.env
