@@ -4,7 +4,7 @@ from core.serializers.sales import SaleSerializer
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
 
-
+@extend_schema(tags=["Ventas"])
 class SaleViewSet(viewsets.ModelViewSet):
     queryset = Sale.objects.all().order_by('-sale_date')
     serializer_class = SaleSerializer

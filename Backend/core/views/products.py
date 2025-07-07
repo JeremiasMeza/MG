@@ -4,7 +4,7 @@ from core.serializers.products import ProductSerializer
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
 
-
+@extend_schema(tags=["Productos"])
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
