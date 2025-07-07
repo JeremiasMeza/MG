@@ -44,7 +44,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'users',
+    'drf_spectacular',
 ]
+
+# Swagger settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Sistema de Inventario George',
+    'DESCRIPTION': 'API para gestión de productos, ventas, cotizaciones y reportes.',
+    'VERSION': '1.0.0',
+}
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
