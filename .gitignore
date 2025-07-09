@@ -1,7 +1,8 @@
 Backend/venv/
-pycache/
+__pycache__/
 *.py[cod]
 *.sqlite3
 **/venv/
 .vscode/
 Backend/.env
+media/
