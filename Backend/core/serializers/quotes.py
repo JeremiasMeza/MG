@@ -9,6 +9,7 @@ class QuoteDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuoteDetail
         fields = ['product_id', 'quantity', 'price_unit', 'subtotal', 'iva']
+        read_only_fields = ['price_unit', 'subtotal', 'iva']
 
 
 class QuoteSerializer(serializers.ModelSerializer):
