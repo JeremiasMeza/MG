@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import Sale, SaleDetail, Product
+from core.models import Sale, SaleDetail, Product, PaymentMethod
 
 
 class SaleDetailSerializer(serializers.ModelSerializer):
@@ -8,11 +8,15 @@ class SaleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaleDetail
         fields = ['product_id', 'quantity', 'price_unit', 'subtotal', 'iva']
+        read_only_fields = ['price_unit', 'subtotal', 'iva']
 
 
 class SaleSerializer(serializers.ModelSerializer):
     details = SaleDetailSerializer(many=True)
     agent = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    payment_method = serializers.PrimaryKeyRelatedField(
+        queryset=PaymentMethod.objects.all(), allow_null=True, required=False
+    )
 
     class Meta:
         model = Sale
