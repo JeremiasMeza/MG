@@ -29,7 +29,10 @@ class SaleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         details_data = validated_data.pop('details')
-        sale = Sale.objects.create(**validated_data)
+        # ``Sale`` requires ``total`` and ``iva`` values. Provide temporary
+        # defaults so the instance can be created before calculating them from
+        # the details data.
+        sale = Sale.objects.create(total=0, iva=0, **validated_data)
 
         total = 0
         iva_total = 0
