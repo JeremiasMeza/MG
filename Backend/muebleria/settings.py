@@ -49,9 +49,6 @@ INSTALLED_APPS = [
 ]
 
 # Swagger settings
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Sistema de Inventario George',
