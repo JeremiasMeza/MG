@@ -1,17 +1,18 @@
-import { connect } from "react-redux"
+import { connect } from "react-redux";
 
-function Layout({children}){
-    return(
-        <div>
-            {children}
-        </div>
-    )
+function Layout({ children }) {
+  return (
+    <div className="layout-container">
+      {/* Puedes agregar aquí elementos comunes como header, sidebar, etc. */}
+      {children}
+    </div>
+  );
 }
 
-const mapStateToProp = state = ({
+// Si no necesitas mapear estado, deja un objeto vacío
+const mapStateToProps = (state) => ({});
 
-})
+// Si no necesitas acciones, deja un objeto vacío
+const mapDispatchToProps = {};
 
-export default connect(mapStateToProp,{
-    
- }) (Layout)
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

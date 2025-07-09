@@ -1,17 +1,14 @@
-import Error404 from 'containers/errors/Error404';
-import Home from 'containers/pages/home';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import React from 'react';
+import AppRoutes from './hocs/routes'; 
+import './styles/index.css'; 
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-          {/* Error display */}
-          <Route path ="*" element={<Error404 />} />
-
-          {/* Home display */}
-          <Route path ="/" element={<Home />} />
-      </Routes>
+    <Router>  
+      <div className="app">
+        <AppRoutes />
+      </div>
     </Router>
   );
 }

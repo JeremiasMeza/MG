@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from core.models import Quote, QuoteDetail, Product
+from decimal import Decimal
 
 
 class QuoteDetailSerializer(serializers.ModelSerializer):
@@ -8,6 +9,7 @@ class QuoteDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuoteDetail
         fields = ['product_id', 'quantity', 'price_unit', 'subtotal', 'iva']
+        read_only_fields = ['price_unit', 'subtotal', 'iva']
 
 
 class QuoteSerializer(serializers.ModelSerializer):
@@ -34,7 +36,7 @@ class QuoteSerializer(serializers.ModelSerializer):
             quantity = item['quantity']
             price = product.price
             subtotal = round(price * quantity, 2)
-            iva = round(subtotal * 0.19, 2)
+            iva = round(subtotal * Decimal("0.19"), 2)
 
             QuoteDetail.objects.create(
                 quote=quote,

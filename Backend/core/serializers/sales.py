@@ -1,5 +1,6 @@
+from decimal import Decimal
 from rest_framework import serializers
-from core.models import Sale, SaleDetail, Product
+from core.models import Sale, SaleDetail, Product, PaymentMethod
 
 
 class SaleDetailSerializer(serializers.ModelSerializer):
@@ -8,11 +9,15 @@ class SaleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaleDetail
         fields = ['product_id', 'quantity', 'price_unit', 'subtotal', 'iva']
+        read_only_fields = ['price_unit', 'subtotal', 'iva']
 
 
 class SaleSerializer(serializers.ModelSerializer):
     details = SaleDetailSerializer(many=True)
     agent = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    payment_method = serializers.PrimaryKeyRelatedField(
+        queryset=PaymentMethod.objects.all(), allow_null=True, required=False
+    )
 
     class Meta:
         model = Sale
@@ -25,16 +30,19 @@ class SaleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         details_data = validated_data.pop('details')
-        sale = Sale.objects.create(**validated_data)
+        # ``Sale`` requires ``total`` and ``iva`` values. Provide temporary
+        # defaults so the instance can be created before calculating them from
+        # the details data.
+        sale = Sale.objects.create(total=Decimal('0'), iva=Decimal('0'), **validated_data)
 
-        total = 0
-        iva_total = 0
+        total = Decimal('0')
+        iva_total = Decimal('0')
         for item in details_data:
             product = Product.objects.get(pk=item['product_id'])
             quantity = item['quantity']
             price = product.price
             subtotal = round(price * quantity, 2)
-            iva = round(subtotal * 0.19, 2)
+            iva = round(subtotal * Decimal('0.19'), 2)
 
             # Descontar stock
             product.stock -= quantity
