@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../containers/pages/Login';
+import Register from '../containers/pages/Register';
 import Dashboard from '../containers/pages/Dashboard';
 import Inventory from '../containers/pages/Inventory';
 import Quotes from '../containers/pages/Quotes';
@@ -22,6 +23,7 @@ const AppRoutes = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/dashboard"
           element={
