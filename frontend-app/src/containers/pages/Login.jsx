@@ -1,50 +1,75 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    localStorage.setItem('accessToken', 'token-simulado');
-    navigate('/dashboard');
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/auth/token/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Guardar tokens en localStorage
+        localStorage.setItem("access", data.access);
+        localStorage.setItem("refresh", data.refresh);
+        alert("Login exitoso!");
+        // redirigir si quieres, por ejemplo:
+        // window.location.href = "/dashboard";
+      } else {
+        setError(data.detail || "Credenciales incorrectas");
+      }
+    } catch (err) {
+      setError("Error al conectarse con el servidor.");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-          >
-            Ingresar
-          </button>
-        </form>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 rounded shadow-md w-full max-w-sm"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
+
+        {error && (
+          <div className="mb-4 text-red-500 text-sm font-semibold">{error}</div>
+        )}
+
+        <input
+          type="text"
+          placeholder="Usuario"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+          required
+        />
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded"
+        >
+          Iniciar sesión
+        </button>
+      </form>
     </div>
   );
 }
