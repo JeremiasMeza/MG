@@ -22,3 +22,4 @@ urlpatterns = [
     path('', include(router.urls)),
     path('reports/summary/', SalesSummaryReportView.as_view(), name='sales-summary-report'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

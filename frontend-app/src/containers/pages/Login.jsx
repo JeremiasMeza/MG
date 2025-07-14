@@ -34,7 +34,7 @@ const LoginForm = () => {
       localStorage.setItem('refresh_token', refresh);
 
       // Obtiene datos del usuario y actualiza contexto
-      const userResponse = await fetch('/users/me/', {
+      const userResponse = await fetch('http://localhost:8000/users/me/', {
         headers: {
           Authorization: `Bearer ${access}`,
         },
