@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from core.models import Product
 from core.serializers.products import ProductSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from drf_spectacular.utils import extend_schema
 
 
@@ -9,7 +9,7 @@ from drf_spectacular.utils import extend_schema
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
