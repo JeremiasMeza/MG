@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-function Sidebar({ user }) {
+function Sidebar({ user, onLogout }) {
   const links = [
     { to: '/dashboard', label: 'Dashboard' },
     { to: '/inventario', label: 'Inventario' },
@@ -30,6 +30,12 @@ function Sidebar({ user }) {
       </nav>
       <div className="p-4 border-t border-gray-700 text-sm">
         {user?.username}
+        <button
+          onClick={onLogout}
+          className="block mt-2 text-left text-red-400 hover:text-red-200"
+        >
+          Cerrar sesión
+        </button>
       </div>
     </div>
   )
