@@ -1,185 +1,99 @@
-import { useEffect, useState } from 'react'
+// src/pages/Ventas.jsx
+import { useState, useEffect } from 'react'
+import ProductCard from '@components/ventas/ProductCard.jsx'
+import CartSummary from '@components/ventas/CartSummary.jsx'
+import Pagination from '@components/ventas/Pagination.jsx'  
 
-const INVENTORY = [
-  { id: 1, code: 'PRD001', name: 'Silla de Oficina', price: 55, stock: 10 },
-  { id: 2, code: 'PRD002', name: 'Mesa de Centro', price: 120, stock: 5 },
-  { id: 3, code: 'PRD003', name: 'Lámpara Moderna', price: 35, stock: 8 },
-]
+
+
+
+
+const INVENTORY = Array(15).fill(0).map((_, i) => ({
+  id: i + 1,
+  code: `PRD${String(i + 1).padStart(3, '0')}`,
+  name: 'Tornillos 1 5/8',
+  price: 400,
+  stock: 20,
+  image: '/tornillo.png', // debes tener esta imagen en /public
+}))
+
+const PER_PAGE = 6
 
 function Ventas() {
   const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState(null)
-  const [qty, setQty] = useState(1)
+  const [qtyMap, setQtyMap] = useState({})
   const [cart, setCart] = useState([])
-  const [message, setMessage] = useState('')
+  const [page, setPage] = useState(1)
 
   const filtered = INVENTORY.filter(
     (p) =>
       p.name.toLowerCase().includes(query.toLowerCase()) ||
-      p.code.toLowerCase().includes(query.toLowerCase()),
+      p.code.toLowerCase().includes(query.toLowerCase())
   )
 
-  useEffect(() => {
-    if (!message) return
-    const t = setTimeout(() => setMessage(''), 3000)
-    return () => clearTimeout(t)
-  }, [message])
+  const pageCount = Math.ceil(filtered.length / PER_PAGE)
+  const productsToShow = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
-  const addToCart = () => {
-    if (!selected) {
-      setMessage('Seleccione un producto')
-      return
-    }
-    if (qty < 1) {
-      setMessage('Cantidad inválida')
-      return
-    }
-    if (qty > selected.stock) {
-      setMessage('Stock insuficiente')
-      return
-    }
+  const handleAdd = (product) => {
+    const qty = qtyMap[product.id] || 1
+    if (qty < 1 || qty > product.stock) return
     setCart((prev) => {
-      const existing = prev.find((it) => it.id === selected.id)
+      const existing = prev.find((it) => it.id === product.id)
       if (existing) {
-        if (existing.quantity + qty > selected.stock) {
-          setMessage('Stock insuficiente')
-          return prev
-        }
+        const updatedQty = existing.quantity + qty
+        if (updatedQty > product.stock) return prev
         return prev.map((it) =>
-          it.id === selected.id
-            ? { ...it, quantity: it.quantity + qty }
-            : it,
+          it.id === product.id ? { ...it, quantity: updatedQty } : it
         )
       }
-      return [...prev, { ...selected, quantity: qty }]
+      return [...prev, { ...product, quantity: qty }]
     })
-    setMessage('Producto agregado')
-    setQuery('')
-    setSelected(null)
-    setQty(1)
   }
 
-  const removeItem = (id) => {
+  const handleQtyChange = (id, val) => {
+    setQtyMap((prev) => ({ ...prev, [id]: val }))
+  }
+
+  const handleRemove = (id) => {
     setCart((prev) => prev.filter((it) => it.id !== id))
   }
 
-  const total = cart.reduce((acc, it) => acc + it.price * it.quantity, 0)
-
   return (
-    <div className="p-6 space-y-6 text-gray-800">
-      <h2 className="text-3xl font-semibold">Ventas</h2>
+    <div className="p-4 md:p-6 text-gray-800">
+      <h2 className="text-2xl font-bold mb-4">Ventas</h2>
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0 mb-6">
+        <select className="border p-2 rounded bg-blue-200">
+          <option value="">Categorías</option>
+        </select>
+        <input
+          type="text"
+          placeholder="nombre / código de barra"
+          className="border p-2 rounded flex-1 bg-blue-100"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
 
-      {message && (
-        <div className="bg-blue-100 text-blue-800 p-2 rounded">{message}</div>
-      )}
-
-      <div className="bg-white rounded shadow p-4 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-4 space-y-4 sm:space-y-0">
-          <div className="flex-1">
-            <label className="block text-sm font-medium mb-1">Producto</label>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value)
-                const prod = INVENTORY.find(
-                  (p) =>
-                    p.name.toLowerCase() === e.target.value.toLowerCase() ||
-                    p.code.toLowerCase() === e.target.value.toLowerCase(),
-                )
-                setSelected(prod || null)
-              }}
-              list="productos"
-              placeholder="Nombre o código"
-              className="border rounded p-2 w-full"
+      <div className="flex gap-4">
+        {/* Productos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
+          {productsToShow.map((p) => (
+            <ProductCard
+              key={p.id}
+              product={p}
+              quantity={qtyMap[p.id] || 1}
+              onQuantityChange={(val) => handleQtyChange(p.id, val)}
+              onAdd={() => handleAdd(p)}
             />
-            <datalist id="productos">
-              {filtered.map((p) => (
-                <option key={p.id} value={p.name}>{`${p.code} - ${p.name}`}</option>
-              ))}
-            </datalist>
-            {selected && (
-              <p className="text-xs text-gray-500 mt-1">
-                Stock disponible: {selected.stock}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Cantidad</label>
-            <input
-              type="number"
-              min="1"
-              value={qty}
-              onChange={(e) => setQty(parseInt(e.target.value, 10) || 1)}
-              className="border rounded p-2 w-24"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={addToCart}
-            className="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center mt-2 sm:mt-0"
-          >
-            <span className="mr-1">+</span> Agregar al carrito
-          </button>
+          ))}
         </div>
+
+        {/* Carrito */}
+        <CartSummary cart={cart} onRemove={handleRemove} />
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded shadow">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left">Producto</th>
-              <th className="px-4 py-2 text-left">Precio unitario</th>
-              <th className="px-4 py-2 text-left">Cantidad</th>
-              <th className="px-4 py-2 text-left">Subtotal</th>
-              <th className="px-4 py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {cart.map((item) => (
-              <tr key={item.id} className="border-t">
-                <td className="px-4 py-2">{item.name}</td>
-                <td className="px-4 py-2">${item.price}</td>
-                <td className="px-4 py-2">{item.quantity}</td>
-                <td className="px-4 py-2">
-                  ${(item.price * item.quantity).toFixed(2)}
-                </td>
-                <td className="px-4 py-2 text-center">
-                  <button
-                    type="button"
-                    onClick={() => removeItem(item.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {cart.length === 0 && (
-              <tr>
-                <td colSpan="5" className="px-4 py-4 text-center text-gray-500">
-                  No hay productos en el carrito
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex flex-col sm:flex-row justify-between items-center bg-white rounded shadow p-4">
-        <div className="text-lg font-medium mb-4 sm:mb-0">
-          Total a pagar: <span className="font-bold">${total.toFixed(2)}</span>
-        </div>
-        <button
-          type="button"
-          onClick={() => setMessage('Venta confirmada')}
-          className="bg-green-600 text-white px-6 py-3 rounded flex items-center"
-        >
-          <span className="mr-2">🛒</span> Confirmar venta
-        </button>
-      </div>
+      {/* Paginación */}
+      <Pagination page={page} totalPages={pageCount} onPageChange={setPage} />
     </div>
   )
 }
