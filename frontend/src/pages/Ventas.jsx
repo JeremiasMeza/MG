@@ -2,33 +2,49 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '@components/ventas/ProductCard.jsx'
 import CartSummary from '@components/ventas/CartSummary.jsx'
-import Pagination from '@components/ventas/Pagination.jsx'  
-
-
-
-
-
-const INVENTORY = Array(15).fill(0).map((_, i) => ({
-  id: i + 1,
-  code: `PRD${String(i + 1).padStart(3, '0')}`,
-  name: 'Tornillos 1 5/8',
-  price: 400,
-  stock: 20,
-  image: '/tornillo.png', // debes tener esta imagen en /public
-}))
+import Pagination from '@components/ventas/Pagination.jsx'
 
 const PER_PAGE = 6
 
 function Ventas() {
   const [query, setQuery] = useState('')
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [paymentMethods, setPaymentMethods] = useState([])
+  const [categoryFilter, setCategoryFilter] = useState('')
   const [qtyMap, setQtyMap] = useState({})
   const [cart, setCart] = useState([])
   const [page, setPage] = useState(1)
+  const [saleInfo, setSaleInfo] = useState({
+    client_first_name: '',
+    client_last_name: '',
+    client_rut: '',
+    client_email: '',
+    payment_method: '',
+  })
 
-  const filtered = INVENTORY.filter(
+  useEffect(() => {
+    const token = localStorage.getItem('access')
+    const headers = { Authorization: `Bearer ${token}` }
+    fetch('http://localhost:8000/api/products/', { headers })
+      .then((r) => r.json())
+      .then(setProducts)
+      .catch((e) => console.error(e))
+    fetch('http://localhost:8000/api/categories/', { headers })
+      .then((r) => r.json())
+      .then(setCategories)
+      .catch((e) => console.error(e))
+    fetch('http://localhost:8000/api/payment-methods/', { headers })
+      .then((r) => r.json())
+      .then(setPaymentMethods)
+      .catch((e) => console.error(e))
+  }, [])
+
+  const filtered = products.filter(
     (p) =>
-      p.name.toLowerCase().includes(query.toLowerCase()) ||
-      p.code.toLowerCase().includes(query.toLowerCase())
+      (categoryFilter === '' || p.category === parseInt(categoryFilter)) &&
+      (p.name.toLowerCase().includes(query.toLowerCase()) ||
+        (p.barcode || '').toLowerCase().includes(query.toLowerCase()))
   )
 
   const pageCount = Math.ceil(filtered.length / PER_PAGE)
@@ -58,12 +74,50 @@ function Ventas() {
     setCart((prev) => prev.filter((it) => it.id !== id))
   }
 
+  const handleFinishSale = async () => {
+    if (cart.length === 0) return
+    const token = localStorage.getItem('access')
+    const payload = {
+      ...saleInfo,
+      payment_method: saleInfo.payment_method || null,
+      details: cart.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+      })),
+    }
+    try {
+      const resp = await fetch('http://localhost:8000/api/sales/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      })
+      if (!resp.ok) throw new Error('Error al registrar venta')
+      alert('Venta registrada')
+      setCart([])
+      setQtyMap({})
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
   return (
     <div className="p-4 md:p-6 text-gray-800">
       <h2 className="text-2xl font-bold mb-4">Ventas</h2>
       <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0 mb-6">
-        <select className="border p-2 rounded bg-blue-200">
+        <select
+          className="border p-2 rounded bg-blue-200"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
           <option value="">Categorías</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
         </select>
         <input
           type="text"
@@ -89,7 +143,14 @@ function Ventas() {
         </div>
 
         {/* Carrito */}
-        <CartSummary cart={cart} onRemove={handleRemove} />
+        <CartSummary
+          cart={cart}
+          onRemove={handleRemove}
+          paymentMethods={paymentMethods}
+          saleInfo={saleInfo}
+          onSaleInfoChange={setSaleInfo}
+          onFinish={handleFinishSale}
+        />
       </div>
 
       {/* Paginación */}

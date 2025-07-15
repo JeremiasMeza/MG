@@ -1,5 +1,12 @@
 // src/components/ventas/CartSummary.jsx
-function CartSummary({ cart, onRemove }) {
+function CartSummary({
+  cart,
+  onRemove,
+  paymentMethods = [],
+  saleInfo,
+  onSaleInfoChange,
+  onFinish,
+}) {
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
   const net = total / 1.19
   const iva = total - net
@@ -25,13 +32,59 @@ function CartSummary({ cart, onRemove }) {
           </li>
         ))}
       </ul>
-
-      <button
-        className="mt-4 w-full bg-gray-200 hover:bg-gray-300 py-2 rounded"
-        onClick={() => alert('Venta finalizada')}
-      >
-        Finalizar Venta
-      </button>
+      <div className="mt-4 space-y-2">
+        <input
+          type="text"
+          name="client_first_name"
+          value={saleInfo.client_first_name}
+          onChange={(e) => onSaleInfoChange({ ...saleInfo, client_first_name: e.target.value })}
+          placeholder="Nombre cliente"
+          className="border p-1 w-full text-sm"
+        />
+        <input
+          type="text"
+          name="client_last_name"
+          value={saleInfo.client_last_name}
+          onChange={(e) => onSaleInfoChange({ ...saleInfo, client_last_name: e.target.value })}
+          placeholder="Apellido cliente"
+          className="border p-1 w-full text-sm"
+        />
+        <input
+          type="text"
+          name="client_rut"
+          value={saleInfo.client_rut}
+          onChange={(e) => onSaleInfoChange({ ...saleInfo, client_rut: e.target.value })}
+          placeholder="RUT"
+          className="border p-1 w-full text-sm"
+        />
+        <input
+          type="email"
+          name="client_email"
+          value={saleInfo.client_email}
+          onChange={(e) => onSaleInfoChange({ ...saleInfo, client_email: e.target.value })}
+          placeholder="Email"
+          className="border p-1 w-full text-sm"
+        />
+        <select
+          className="border p-1 w-full text-sm"
+          name="payment_method"
+          value={saleInfo.payment_method}
+          onChange={(e) => onSaleInfoChange({ ...saleInfo, payment_method: e.target.value })}
+        >
+          <option value="">Método de pago</option>
+          {paymentMethods.map((pm) => (
+            <option key={pm.id} value={pm.id}>
+              {pm.method_name}
+            </option>
+          ))}
+        </select>
+        <button
+          className="w-full bg-gray-200 hover:bg-gray-300 py-2 rounded"
+          onClick={onFinish}
+        >
+          Finalizar Venta
+        </button>
+      </div>
     </div>
   )
 }
