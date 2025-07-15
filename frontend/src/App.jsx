@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Layout from './components/Layout.jsx'
@@ -17,6 +17,35 @@ function App() {
     setToken(t)
   }
 
+  const handleLogout = () => {
+    setUser(null)
+    setToken('')
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+  }
+
+  useEffect(() => {
+    if (!token) return
+    const decode = (tok) => {
+      try {
+        return JSON.parse(atob(tok.split('.')[1]))
+      } catch {
+        return null
+      }
+    }
+    const payload = decode(token)
+    if (!payload || !payload.exp) return
+    const expiresIn = payload.exp * 1000 - Date.now()
+    if (expiresIn <= 0) {
+      handleLogout()
+      return
+    }
+    const id = setTimeout(() => {
+      handleLogout()
+    }, expiresIn)
+    return () => clearTimeout(id)
+  }, [token])
+
   if (!token) {
     return (
       <div className="p-4">
@@ -29,7 +58,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout user={user} />}>
+        <Route element={<Layout user={user} onLogout={handleLogout} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/ventas" element={<Ventas />} />
