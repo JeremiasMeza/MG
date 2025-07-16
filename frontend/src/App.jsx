@@ -24,6 +24,26 @@ function App() {
     localStorage.removeItem('refresh')
   }
 
+  const refreshToken = async () => {
+    const refresh = localStorage.getItem('refresh')
+    try {
+      const resp = await fetch(
+        'http://192.168.1.52:8000/api/auth/token/refresh/',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refresh }),
+        }
+      )
+      if (!resp.ok) throw new Error('')
+      const data = await resp.json()
+      localStorage.setItem('access', data.access)
+      setToken(data.access)
+    } catch {
+      handleLogout()
+    }
+  }
+
   useEffect(() => {
     if (!token) return
     const decode = (tok) => {
@@ -40,10 +60,24 @@ function App() {
       handleLogout()
       return
     }
-    const id = setTimeout(() => {
+
+    const promptId = setTimeout(async () => {
+      const keep = window.confirm('¿Deseas continuar en la sesión?')
+      if (keep) {
+        await refreshToken()
+      } else {
+        handleLogout()
+      }
+    }, Math.max(0, expiresIn - 60000))
+
+    const logoutId = setTimeout(() => {
       handleLogout()
     }, expiresIn)
-    return () => clearTimeout(id)
+
+    return () => {
+      clearTimeout(promptId)
+      clearTimeout(logoutId)
+    }
   }, [token])
 
   if (!token) {
