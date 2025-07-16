@@ -5,7 +5,7 @@ import ProductRow from '@components/ventas/ProductRow.jsx'
 import CartSummary from '@components/ventas/CartSummary.jsx'
 import Pagination from '@components/ventas/Pagination.jsx'
 
-const PER_PAGE_GRID = 6
+const PER_PAGE_GRID = 12
 const PER_PAGE_LIST = 15
 
 function Ventas() {
@@ -194,45 +194,47 @@ function Ventas() {
                 </span>
               </div>
               
-              {productsToShow.length > 0 ? (
-                viewMode === 'grid' ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
-                    {productsToShow.map((p) => (
-                      <ProductCard
-                        key={p.id}
-                        product={p}
-                        quantity={qtyMap[p.id] || 1}
-                        onQuantityChange={(val) => handleQtyChange(p.id, val)}
-                        onAdd={() => handleAdd(p)}
-                      />
-                    ))}
-                  </div>
+              <div className="max-h-[65vh] overflow-y-auto">
+                {productsToShow.length > 0 ? (
+                  viewMode === 'grid' ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
+                      {productsToShow.map((p) => (
+                        <ProductCard
+                          key={p.id}
+                          product={p}
+                          quantity={qtyMap[p.id] || 1}
+                          onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                          onAdd={() => handleAdd(p)}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {productsToShow.map((p) => (
+                        <ProductRow
+                          key={p.id}
+                          product={p}
+                          quantity={qtyMap[p.id] || 1}
+                          onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                          onAdd={() => handleAdd(p)}
+                        />
+                      ))}
+                    </div>
+                  )
                 ) : (
-                  <div className="space-y-2">
-                    {productsToShow.map((p) => (
-                      <ProductRow
-                        key={p.id}
-                        product={p}
-                        quantity={qtyMap[p.id] || 1}
-                        onQuantityChange={(val) => handleQtyChange(p.id, val)}
-                        onAdd={() => handleAdd(p)}
-                      />
-                    ))}
+                  <div className="text-center py-12">
+                    <div className="text-gray-400 mb-3">
+                      <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 text-base">No se encontraron productos</p>
+                    <p className="text-gray-400 text-xs mt-1">
+                      Intenta cambiar los filtros o la búsqueda
+                    </p>
                   </div>
-                )
-              ) : (
-                <div className="text-center py-12">
-                  <div className="text-gray-400 mb-3">
-                    <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-500 text-base">No se encontraron productos</p>
-                  <p className="text-gray-400 text-xs mt-1">
-                    Intenta cambiar los filtros o la búsqueda
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Paginación */}
               {pageCount > 1 && (
