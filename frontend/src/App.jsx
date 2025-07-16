@@ -48,8 +48,7 @@ function App() {
 
   if (!token) {
     return (
-      <div className="p-4">
-        <h1 className="text-2xl mb-4">Iniciar Sesión</h1>
+      <div className="">
         <Login onSuccess={handleLogin} />
       </div>
     )
