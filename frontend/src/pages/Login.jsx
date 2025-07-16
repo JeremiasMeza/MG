@@ -37,15 +37,12 @@ function Login({ onSuccess }) {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Logo Section */}
           <div className="text-center mb-8">
-            <div className="w-24 h-24 mx-auto mb-4 bg-blue-600 rounded-full flex items-center justify-center">
-              {/* Opción 1: Si tienes logo en public/images/ */}
-              {/* <img src="/images/logo.png" alt="Mueblerías George" className="w-16 h-16 object-contain" /> */}
-              
-              {/* Opción 2: Logo temporal con iniciales */}
-              <span className="text-white text-2xl font-bold">MG</span>
+            <div className="w-40 h-40 mx-auto  flex items-center justify-center">
+               <img src="/images/logo.png" alt="Mueblerías George" className="w-50 h-50 object-contain" />
+
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Mueblerías George</h1>
-            <p className="text-gray-600">Ingresa a tu cuenta</p>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Ingresa a tu cuenta</h1>
+
           </div>
 
           {/* Form */}

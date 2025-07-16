@@ -13,10 +13,8 @@ function Sidebar({ user, onLogout }) {
   return (
     <div className="flex flex-col h-full w-64 bg-slate-900 text-white shadow-xl">
       {/* Header */}
-      <div className="p-6 border-b border-slate-700">
-        <h1 className="text-xl font-bold text-blue-400 tracking-wide">
-          Mueblerías George
-        </h1>
+      <div className="h-20 p-6 border-b border-slate-700 flex items-center justify-center">
+        <img src="../images/logo.png" alt="Mueblerías George" className="w-30 h-30 object-contain" />
       </div>
 
       {/* Navigation */}
