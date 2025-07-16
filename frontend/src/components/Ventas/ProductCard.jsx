@@ -20,7 +20,7 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
       )}
 
       {/* Imagen del producto */}
-      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 p-3 flex items-center justify-center h-32">
+        <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 p-2 flex items-center justify-center h-24">
         <img
           src={product.image}
           alt={product.name}
