@@ -1,10 +1,12 @@
 // src/pages/Ventas.jsx
 import { useState, useEffect } from 'react'
 import ProductCard from '@components/ventas/ProductCard.jsx'
+import ProductRow from '@components/ventas/ProductRow.jsx'
 import CartSummary from '@components/ventas/CartSummary.jsx'
 import Pagination from '@components/ventas/Pagination.jsx'
 
-const PER_PAGE = 6
+const PER_PAGE_GRID = 6
+const PER_PAGE_LIST = 15
 
 function Ventas() {
   const [query, setQuery] = useState('')
@@ -15,6 +17,7 @@ function Ventas() {
   const [qtyMap, setQtyMap] = useState({})
   const [cart, setCart] = useState([])
   const [page, setPage] = useState(1)
+  const [viewMode, setViewMode] = useState('grid')
   const [saleInfo, setSaleInfo] = useState({
     client_first_name: '',
     client_last_name: '',
@@ -40,6 +43,10 @@ function Ventas() {
       .catch((e) => console.error(e))
   }, [])
 
+  useEffect(() => {
+    setPage(1)
+  }, [query, categoryFilter, viewMode])
+
   const filtered = products.filter(
     (p) =>
       (categoryFilter === '' || p.category === parseInt(categoryFilter)) &&
@@ -47,8 +54,9 @@ function Ventas() {
         (p.barcode || '').toLowerCase().includes(query.toLowerCase()))
   )
 
-  const pageCount = Math.ceil(filtered.length / PER_PAGE)
-  const productsToShow = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+  const perPage = viewMode === 'grid' ? PER_PAGE_GRID : PER_PAGE_LIST
+  const pageCount = Math.ceil(filtered.length / perPage)
+  const productsToShow = filtered.slice((page - 1) * perPage, page * perPage)
 
   const handleAdd = (product) => {
     const qty = qtyMap[product.id] || 1
@@ -154,28 +162,64 @@ function Ventas() {
                 </div>
               </div>
 
-              {/* Resultados */}
+              {/* Vista */}
               <div className="mb-4 flex items-center justify-between text-xs text-gray-600">
                 <span>
                   {filtered.length} producto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
                 </span>
-                <span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`px-2 py-1 rounded-md border text-xs ${
+                      viewMode === 'grid'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-gray-600 border-gray-300'
+                    }`}
+                  >
+                    Cards
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`px-2 py-1 rounded-md border text-xs ${
+                      viewMode === 'list'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-gray-600 border-gray-300'
+                    }`}
+                  >
+                    Lista
+                  </button>
+                </div>
+                <span className="ml-auto">
                   Página {page} de {pageCount}
                 </span>
               </div>
               
               {productsToShow.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
-                  {productsToShow.map((p) => (
-                    <ProductCard
-                      key={p.id}
-                      product={p}
-                      quantity={qtyMap[p.id] || 1}
-                      onQuantityChange={(val) => handleQtyChange(p.id, val)}
-                      onAdd={() => handleAdd(p)}
-                    />
-                  ))}
-                </div>
+                viewMode === 'grid' ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
+                    {productsToShow.map((p) => (
+                      <ProductCard
+                        key={p.id}
+                        product={p}
+                        quantity={qtyMap[p.id] || 1}
+                        onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                        onAdd={() => handleAdd(p)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {productsToShow.map((p) => (
+                      <ProductRow
+                        key={p.id}
+                        product={p}
+                        quantity={qtyMap[p.id] || 1}
+                        onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                        onAdd={() => handleAdd(p)}
+                      />
+                    ))}
+                  </div>
+                )
               ) : (
                 <div className="text-center py-12">
                   <div className="text-gray-400 mb-3">
