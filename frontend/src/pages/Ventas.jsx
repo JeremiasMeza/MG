@@ -26,15 +26,15 @@ function Ventas() {
   useEffect(() => {
     const token = localStorage.getItem('access')
     const headers = { Authorization: `Bearer ${token}` }
-    fetch('http://localhost:8000/api/products/', { headers })
+    fetch('http://192.168.1.52:8000/api/products/', { headers })
       .then((r) => r.json())
       .then(setProducts)
       .catch((e) => console.error(e))
-    fetch('http://localhost:8000/api/categories/', { headers })
+    fetch('http://192.168.1.52:8000/api/categories/', { headers })
       .then((r) => r.json())
       .then(setCategories)
       .catch((e) => console.error(e))
-    fetch('http://localhost:8000/api/payment-methods/', { headers })
+    fetch('http://192.168.1.52:8000/api/payment-methods/', { headers })
       .then((r) => r.json())
       .then(setPaymentMethods)
       .catch((e) => console.error(e))
@@ -86,7 +86,7 @@ function Ventas() {
       })),
     }
     try {
-      const resp = await fetch('http://localhost:8000/api/sales/', {
+      const resp = await fetch('http://192.168.1.52:8000/api/sales/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,57 +104,116 @@ function Ventas() {
   }
 
   return (
-    <div className="p-4 md:p-6 text-gray-800">
-      <h2 className="text-2xl font-bold mb-4">Ventas</h2>
-      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0 mb-6">
-        <select
-          className="border p-2 rounded bg-blue-200"
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-        >
-          <option value="">Categorías</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="nombre / código de barra"
-          className="border p-2 rounded flex-1 bg-blue-100"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="container mx-auto px-3 py-4">
+        {/* Contenido Principal */}
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
+          {/* Productos - 4 columnas */}
+          <div className="xl:col-span-4">
+            <div className="bg-white rounded-xl shadow-lg p-4">
+              {/* Filtros y Búsqueda */}
+              <div className="flex flex-col lg:flex-row gap-3 mb-4">
+                {/* Selector de categoría */}
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Categoría
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                  >
+                    <option value="">Todas las categorías</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-      <div className="flex gap-4">
-        {/* Productos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
-          {productsToShow.map((p) => (
-            <ProductCard
-              key={p.id}
-              product={p}
-              quantity={qtyMap[p.id] || 1}
-              onQuantityChange={(val) => handleQtyChange(p.id, val)}
-              onAdd={() => handleAdd(p)}
-            />
-          ))}
+                {/* Búsqueda */}
+                <div className="flex-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Buscar producto
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Buscar por nombre o código de barras..."
+                      className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Resultados */}
+              <div className="mb-4 flex items-center justify-between text-xs text-gray-600">
+                <span>
+                  {filtered.length} producto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
+                </span>
+                <span>
+                  Página {page} de {pageCount}
+                </span>
+              </div>
+              
+              {productsToShow.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
+                  {productsToShow.map((p) => (
+                    <ProductCard
+                      key={p.id}
+                      product={p}
+                      quantity={qtyMap[p.id] || 1}
+                      onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                      onAdd={() => handleAdd(p)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-gray-400 mb-3">
+                    <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-500 text-base">No se encontraron productos</p>
+                  <p className="text-gray-400 text-xs mt-1">
+                    Intenta cambiar los filtros o la búsqueda
+                  </p>
+                </div>
+              )}
+
+              {/* Paginación */}
+              {pageCount > 1 && (
+                <div className="mt-4 border-t pt-4">
+                  <Pagination page={page} totalPages={pageCount} onPageChange={setPage} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Carrito - 1 columna */}
+          <div className="xl:col-span-1">
+            <div className="sticky top-4">
+              <CartSummary
+                cart={cart}
+                onRemove={handleRemove}
+                paymentMethods={paymentMethods}
+                saleInfo={saleInfo}
+                onSaleInfoChange={setSaleInfo}
+                onFinish={handleFinishSale}
+              />
+            </div>
+          </div>
         </div>
-
-        {/* Carrito */}
-        <CartSummary
-          cart={cart}
-          onRemove={handleRemove}
-          paymentMethods={paymentMethods}
-          saleInfo={saleInfo}
-          onSaleInfoChange={setSaleInfo}
-          onFinish={handleFinishSale}
-        />
       </div>
-
-      {/* Paginación */}
-      <Pagination page={page} totalPages={pageCount} onPageChange={setPage} />
     </div>
   )
 }
