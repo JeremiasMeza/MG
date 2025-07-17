@@ -7,9 +7,6 @@
     @page {
       size: A4;
       margin: 20mm;
-      @bottom-center {
-        content: "Página " counter(page) " de " counter(pages);
-      }
     }
     
     body {
@@ -251,6 +248,7 @@
   </div>
   
   <div class="footer">
+    <p>Página <pdf:pagenumber> de <pdf:pagecount></p>
     <p><strong>¡Gracias por su preferencia!</strong></p>
   </div>
 </body>
