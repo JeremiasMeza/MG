@@ -53,7 +53,10 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
           
           <div className="text-right">
             <div className="text-lg font-bold text-gray-900">
-              ${product.price.toLocaleString('es-CL')}
+              {product.price.toLocaleString('es-CL', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
             </div>
             <div className="text-xs text-gray-500">
               c/u

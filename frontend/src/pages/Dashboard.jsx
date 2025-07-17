@@ -75,25 +75,37 @@ function Dashboard() {
             <div className="p-4 bg-white rounded-lg shadow">
               <p className="text-sm text-gray-500">Total Ventas</p>
               <p className="text-xl font-semibold text-gray-800">
-                ${summary.total_ventas.toLocaleString('es-CL')}
+                {summary.total_ventas.toLocaleString('es-CL', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
               </p>
             </div>
             <div className="p-4 bg-white rounded-lg shadow">
               <p className="text-sm text-gray-500">IVA</p>
               <p className="text-xl font-semibold text-gray-800">
-                ${summary.total_iva.toLocaleString('es-CL')}
+                {summary.total_iva.toLocaleString('es-CL', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
               </p>
             </div>
             <div className="p-4 bg-white rounded-lg shadow">
               <p className="text-sm text-gray-500">Costos</p>
               <p className="text-xl font-semibold text-gray-800">
-                ${summary.total_costos.toLocaleString('es-CL')}
+                {summary.total_costos.toLocaleString('es-CL', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
               </p>
             </div>
             <div className="p-4 bg-white rounded-lg shadow">
               <p className="text-sm text-gray-500">Ganancia</p>
               <p className="text-xl font-semibold text-gray-800">
-                ${summary.ganancia_neta.toLocaleString('es-CL')}
+                {summary.ganancia_neta.toLocaleString('es-CL', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
               </p>
             </div>
           </div>
@@ -105,7 +117,10 @@ function Dashboard() {
                 {summary.daily_sales.map((d) => (
                   <div
                     key={d.day}
-                    title={`${d.day}: $${d.total.toLocaleString('es-CL')}`}
+                    title={`${d.day}: $${d.total.toLocaleString('es-CL', {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })}`}
                     className="bg-blue-500 w-3"
                     style={{ height: maxDaily ? `${(d.total / maxDaily) * 100}%` : 0 }}
                   ></div>
