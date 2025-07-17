@@ -23,7 +23,6 @@ function Cotizaciones() {
   })
   const [showQuotes, setShowQuotes] = useState(false)
   const [quotes, setQuotes] = useState([])
-  const [pdfUrl, setPdfUrl] = useState('')
 
   useEffect(() => {
     const token = localStorage.getItem('access')
@@ -108,9 +107,11 @@ function Cotizaciones() {
       setCart([])
       setQtyMap({})
       setQuoteInfo({ client_name: '', client_rut: '', client_email: '' })
-      const pdfResp = await fetch(`http://192.168.1.52:8000/api/quotes/${data.id}/export/`, { headers: { Authorization: `Bearer ${token}` } })
+      const pdfResp = await fetch(`http://192.168.1.52:8000/api/quotes/${data.id}/export/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       const pdfData = await pdfResp.json()
-      setPdfUrl(pdfData.pdf_url)
+      window.open(pdfData.pdf_url, '_blank')
       setShowQuotes(true)
       setQuotes((prev) => [data, ...prev])
     } catch (err) {
@@ -126,7 +127,7 @@ function Cotizaciones() {
       })
       if (!resp.ok) throw new Error('Error al cargar cotización')
       const data = await resp.json()
-      setPdfUrl(data.pdf_url)
+      window.open(data.pdf_url, '_blank')
     } catch (err) {
       alert(err.message)
     }
@@ -292,14 +293,8 @@ function Cotizaciones() {
                   ))}
                 </ul>
               </div>
-              <div className="flex-1">
-                {pdfUrl ? (
-                  <iframe src={pdfUrl} className="w-full h-full" title="Cotizacion" />
-                ) : (
-                  <div className="h-full flex items-center justify-center text-gray-400">
-                    Selecciona una cotización
-                  </div>
-                )}
+              <div className="flex-1 flex items-center justify-center text-gray-400">
+                Selecciona una cotización para descargar
               </div>
             </div>
           </div>
