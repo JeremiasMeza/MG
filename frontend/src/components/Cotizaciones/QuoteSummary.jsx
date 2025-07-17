@@ -12,6 +12,11 @@ function QuoteSummary({
   const net = total / 1.19
   const iva = total - net
 
+  const isFormValid =
+    cart.length > 0 &&
+    quoteInfo.client_name.trim() !== '' &&
+    quoteInfo.client_rut.trim() !== ''
+
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 w-full">
       {/* Header */}
@@ -124,12 +129,12 @@ function QuoteSummary({
       {/* Botón generar */}
       <button
         className={`w-full py-3 px-4 rounded-xl font-medium text-white transition-all duration-200 ${
-          cart.length === 0
-            ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
+          isFormValid
+            ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
+            : 'bg-gray-300 cursor-not-allowed'
         }`}
         onClick={onFinish}
-        disabled={cart.length === 0}
+        disabled={!isFormValid}
       >
         Generar Cotización
       </button>
@@ -138,3 +143,4 @@ function QuoteSummary({
 }
 
 export default QuoteSummary
+
