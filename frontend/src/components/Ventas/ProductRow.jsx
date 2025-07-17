@@ -10,11 +10,11 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd, onShowDetails 
       }`}
     >
       {/* Imagen */}
-      <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded">
+      <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded" onClick={onShowDetails}>
         <img
           src={product.image}
           alt={product.name}
-          className="max-h-full max-w-full object-contain"
+          className="max-h-full max-w-full object-contain cursor-pointer"
           onError={(e) => {
             e.target.src =
               'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDdMMTYgM0g4TDQgN1YxN0E0IDQgMCAwIDAgOCAyMUgxNkE0IDQgMCAwIDAgMjAgMTdWN1oiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTkgMTFBMyAzIDAgMCAwIDE1IDExIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo='
@@ -98,13 +98,6 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd, onShowDetails 
           <span className="text-xs">Agregar</span>
         </button>
 
-        <button
-          onClick={onShowDetails}
-          className="text-xs text-blue-600 hover:underline"
-          type="button"
-        >
-          Ver detalles
-        </button>
       </div>
     </div>
   )
