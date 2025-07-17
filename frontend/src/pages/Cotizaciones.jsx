@@ -114,6 +114,7 @@ function Cotizaciones() {
       const pdfResp = await fetch(`http://192.168.1.52:8000/api/quotes/${data.id}/export/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
+      if (!pdfResp.ok) throw new Error('Error al generar PDF de cotización')
       const pdfData = await pdfResp.json()
       window.open(pdfData.pdf_url, '_blank')
       setShowQuotes(true)
