@@ -12,14 +12,14 @@ function Inventario() {
   const [modalOpen, setModalOpen] = useState(false)
 
   const token = localStorage.getItem('access')
-  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+  const authHeaders = { Authorization: `Bearer ${token}` }
 
   const fetchData = () => {
-    fetch('http://192.168.1.52:8000/api/products/', { headers })
+    fetch('http://192.168.1.52:8000/api/products/', { headers: authHeaders })
       .then((r) => r.json())
       .then(setProducts)
       .catch((e) => console.error(e))
-    fetch('http://192.168.1.52:8000/api/categories/', { headers })
+    fetch('http://192.168.1.52:8000/api/categories/', { headers: authHeaders })
       .then((r) => r.json())
       .then(setCategories)
       .catch((e) => console.error(e))
@@ -44,8 +44,8 @@ function Inventario() {
           : 'http://192.168.1.52:8000/api/products/',
         {
           method: editing ? 'PUT' : 'POST',
-          headers,
-          body: JSON.stringify(data),
+          headers: authHeaders,
+          body: data,
         }
       )
       if (!resp.ok) throw new Error('Error al guardar')
@@ -62,7 +62,7 @@ function Inventario() {
     try {
       const resp = await fetch(
         `http://192.168.1.52:8000/api/products/${product.id}/`,
-        { method: 'DELETE', headers }
+        { method: 'DELETE', headers: authHeaders }
       )
       if (!resp.ok) throw new Error('Error al eliminar')
       fetchData()
