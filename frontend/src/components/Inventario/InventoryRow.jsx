@@ -46,7 +46,10 @@ function InventoryRow({ product, onEdit, onDelete }) {
             </>
           )}
           <span className="ml-2 font-bold text-gray-900">
-            ${product.price.toLocaleString('es-CL')}
+            {product.price.toLocaleString('es-CL', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
           </span>
         </div>
       </div>

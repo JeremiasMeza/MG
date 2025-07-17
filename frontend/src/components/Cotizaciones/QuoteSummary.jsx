@@ -52,7 +52,10 @@ function QuoteSummary({
                     <span className="text-sm text-gray-500">Qty: {item.quantity}</span>
                     <span className="text-sm text-gray-400">•</span>
                     <span className="text-sm font-medium text-gray-700">
-                      ${(item.price * item.quantity).toLocaleString()}
+                      {(item.price * item.quantity).toLocaleString('es-CL', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      })}
                     </span>
                   </div>
                 </div>
