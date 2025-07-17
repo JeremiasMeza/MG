@@ -1,7 +1,8 @@
 // src/components/inventario/InventoryRow.jsx
 function InventoryRow({ product, onEdit, onDelete }) {
   const isOutOfStock = product.stock === 0
-  const isLowStock = product.stock <= product.stock_minimum && product.stock > 0
+  const isBelowMinimum = product.stock < product.stock_minimum
+  const isAtMinimum = product.stock === product.stock_minimum && product.stock > 0
 
   return (
     <div
@@ -29,7 +30,13 @@ function InventoryRow({ product, onEdit, onDelete }) {
           <span className="text-gray-500">Stock:</span>
           <span
             className={`font-medium ${
-              isOutOfStock ? 'text-red-500' : isLowStock ? 'text-amber-500' : 'text-green-600'
+              isOutOfStock
+                ? 'text-red-500'
+                : isBelowMinimum
+                ? 'text-orange-600'
+                : isAtMinimum
+                ? 'text-amber-500'
+                : 'text-green-600'
             }`}
           >
             {product.stock}
