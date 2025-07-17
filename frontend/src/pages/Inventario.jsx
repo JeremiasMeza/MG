@@ -16,14 +16,19 @@ function Inventario() {
   const authHeaders = { Authorization: `Bearer ${token}` }
 
   const fetchData = () => {
-    fetch('http://192.168.1.52:8000/api/products/', { headers })
-      .then((r) => r.json())
-      .then(setProducts)
+    setLoading(true)
+    Promise.all([
+      fetch('http://192.168.1.52:8000/api/products/', { headers: authHeaders }).then((r) => r.json()),
+      fetch('http://192.168.1.52:8000/api/categories/', {
+        headers: authHeaders,
+      }).then((r) => r.json()),
+    ])
+      .then(([prods, cats]) => {
+        setProducts(prods)
+        setCategories(cats)
+      })
       .catch((e) => console.error(e))
-    fetch('http://192.168.1.52:8000/api/categories/', { headers })
-      .then((r) => r.json())
-      .then(setCategories)
-      .catch((e) => console.error(e))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
