@@ -87,6 +87,7 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
                   const clampedVal = Math.min(Math.max(1, val), product.stock)
                   onQuantityChange(clampedVal)
                 }}
+                onWheel={(e) => e.target.blur()}
                 className="w-10 px-1 py-1 text-center border-0 focus:ring-0 focus:outline-none text-xs"
                 disabled={isOutOfStock}
               />
