@@ -3,43 +3,255 @@
 <head>
   <meta charset="utf-8">
   <style>
-    body { font-family: Arial, sans-serif; font-size: 12px; }
-    h1 { text-align: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+    @page {
+      size: A4;
+      margin: 20mm;
+      @bottom-center {
+        content: "Página " counter(page) " de " counter(pages);
+      }
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 12px;
+      line-height: 1.4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #2c5aa0;
+    }
+    
+    .company-info {
+      flex: 1;
+    }
+    
+    .company-logo {
+      width: 120px;
+      height: auto;
+      max-height: 80px;
+      object-fit: contain;
+    }
+    
+    .company-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c5aa0;
+      margin: 0;
+    }
+    
+    .company-details {
+      font-size: 10px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #2c5aa0;
+      margin: 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .client-info {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      border-left: 4px solid #2c5aa0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    th {
+      background: linear-gradient(135deg, #2c5aa0 0%, #1e3d6f 100%);
+      color: white;
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid #1e3d6f;
+    }
+    
+    td {
+      padding: 10px 8px;
+      border: 1px solid #e0e0e0;
+      font-size: 11px;
+    }
+    
+    tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    
+    tbody tr:hover {
+      background-color: #e3f2fd;
+    }
+    
+    .text-right {
+      text-align: right;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    .totals-section {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .totals-table {
+      width: 300px;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .totals-table tr {
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .totals-table td {
+      padding: 10px 15px;
+      font-size: 12px;
+      border: none;
+    }
+    
+    .totals-table .label {
+      font-weight: bold;
+      color: #555;
+    }
+    
+    .totals-table .value {
+      text-align: right;
+      font-weight: bold;
+      color: #2c5aa0;
+    }
+    
+    .total-row {
+      background: linear-gradient(135deg, #2c5aa0 0%, #1e3d6f 100%);
+      color: white !important;
+    }
+    
+    .total-row td {
+      color: white !important;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #2c5aa0;
+      text-align: center;
+      font-size: 10px;
+      color: #666;
+    }
+    
+    .page-break {
+      page-break-before: always;
+    }
+    
+    .header-repeat {
+      display: none;
+    }
+    
+    @media print {
+      .header-repeat {
+        display: block;
+      }
+      
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Header Principal -->
+  <div class="header">
+    <div class="company-info">
+      <div class="company-name">Tu Empresa</div>
+      <div class="company-details">
+        Dirección: Av. Principal 123, Santiago, Chile<br>
+        Teléfono: +56 2 2345 6789 | Email: contacto@tuempresa.cl<br>
+        RUT: 12.345.678-9
+      </div>
+    </div>
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo Empresa" class="company-logo">
+    </div>
+  </div>
+  
   <h1>Cotización #{{ quote.id }}</h1>
-  <p>Cliente: {{ quote.client_name }}<br>
-     RUT: {{ quote.client_rut }}<br>
-     Email: {{ quote.client_email }}</p>
+  
+  <div class="client-info">
+    <p><strong>Cliente:</strong> {{ quote.client_name }}</p>
+    <p><strong>RUT:</strong> {{ quote.client_rut }}</p>
+    <p><strong>Email:</strong> {{ quote.client_email }}</p>
+  </div>
 
   <table>
     <thead>
       <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio</th>
-        <th>Subtotal</th>
+        <th style="width: 45%;">Producto</th>
+        <th style="width: 15%;" class="text-center">Cantidad</th>
+        <th style="width: 20%;" class="text-right">Precio</th>
+        <th style="width: 20%;" class="text-right">Subtotal</th>
       </tr>
     </thead>
     <tbody>
       {% for d in quote.details.all %}
         <tr>
           <td>{{ d.product.name }}</td>
-          <td>{{ d.quantity }}</td>
-          <td>${{ d.price_unit }}</td>
-          <td>${{ d.subtotal }}</td>
+          <td class="text-center">{{ d.quantity }}</td>
+          <td class="text-right">${{ d.price_unit }}</td>
+          <td class="text-right">${{ d.subtotal }}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 
-  <p style="text-align: right; margin-top: 20px;">
-    Subtotal: ${{ quote.subtotal }}<br>
-    IVA: ${{ quote.iva }}<br>
-    <strong>Total: ${{ quote.total }}</strong>
-  </p>
+  <div class="totals-section">
+    <table class="totals-table">
+      <tr>
+        <td class="label">Subtotal:</td>
+        <td class="value">${{ quote.subtotal }}</td>
+      </tr>
+      <tr>
+        <td class="label">IVA:</td>
+        <td class="value">${{ quote.iva }}</td>
+      </tr>
+      <tr class="total-row">
+        <td class="label">TOTAL:</td>
+        <td class="value">${{ quote.total }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="footer">
+    <p><strong>¡Gracias por su preferencia!</strong></p>
+  </div>
 </body>
 </html>
