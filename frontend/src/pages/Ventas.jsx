@@ -4,6 +4,7 @@ import ProductCard from '@components/ventas/ProductCard.jsx'
 import ProductRow from '@components/ventas/ProductRow.jsx'
 import CartSummary from '@components/ventas/CartSummary.jsx'
 import Pagination from '@components/ventas/Pagination.jsx'
+import ProductDetailModal from '@components/ProductDetailModal.jsx'
 
 const PER_PAGE_GRID = 12
 const PER_PAGE_LIST = 15
@@ -18,6 +19,7 @@ function Ventas() {
   const [cart, setCart] = useState([])
   const [page, setPage] = useState(1)
   const [viewMode, setViewMode] = useState('grid')
+  const [detailProduct, setDetailProduct] = useState(null)
   const [saleInfo, setSaleInfo] = useState({
     client_first_name: '',
     client_last_name: '',
@@ -205,6 +207,7 @@ function Ventas() {
                           quantity={qtyMap[p.id] || 1}
                           onQuantityChange={(val) => handleQtyChange(p.id, val)}
                           onAdd={() => handleAdd(p)}
+                          onShowDetails={() => setDetailProduct(p)}
                         />
                       ))}
                     </div>
@@ -217,6 +220,7 @@ function Ventas() {
                           quantity={qtyMap[p.id] || 1}
                           onQuantityChange={(val) => handleQtyChange(p.id, val)}
                           onAdd={() => handleAdd(p)}
+                          onShowDetails={() => setDetailProduct(p)}
                         />
                       ))}
                     </div>
@@ -260,6 +264,11 @@ function Ventas() {
           </div>
         </div>
       </div>
+      <ProductDetailModal
+        open={!!detailProduct}
+        product={detailProduct}
+        onClose={() => setDetailProduct(null)}
+      />
     </div>
   )
 }

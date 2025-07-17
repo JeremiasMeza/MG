@@ -1,5 +1,5 @@
 // src/components/ventas/ProductCard.jsx
-function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
+function ProductCard({ product, quantity, onQuantityChange, onAdd, onShowDetails }) {
   const isOutOfStock = product.stock === 0
   const isBelowMinimum = product.stock < product.stock_minimum
 
@@ -33,9 +33,12 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
 
       {/* Información del producto */}
       <div className="p-3">
-        <h3 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem]">
+        <h3 className="font-medium text-sm text-gray-900 mb-1 line-clamp-2 min-h-[2.5rem]">
           {product.name}
         </h3>
+        {product.barcode && (
+          <p className="text-xs text-gray-500 mb-1">Cod: {product.barcode}</p>
+        )}
         
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-1">
@@ -119,6 +122,14 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
             <span className="text-xs">Agregar</span>
+          </button>
+
+          <button
+            onClick={onShowDetails}
+            className="mt-2 text-xs text-blue-600 hover:underline"
+            type="button"
+          >
+            Ver detalles
           </button>
         </div>
 
