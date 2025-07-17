@@ -6,7 +6,7 @@ function Layout({ user, onLogout }) {
   return (
     <div className="flex h-screen">
       <Sidebar user={user} onLogout={onLogout} />
-      <main className="flex-1 bg-gray-100 overflow-y-auto">
+      <main className="flex-1 bg-gray-100">
         <Outlet />
       </main>
     </div>
