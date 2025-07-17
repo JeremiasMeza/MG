@@ -88,6 +88,10 @@ function Cotizaciones() {
 
   const handleGenerate = async () => {
     if (cart.length === 0) return
+    if (quoteInfo.client_name.trim() === '' || quoteInfo.client_rut.trim() === '') {
+      alert('Debe ingresar nombre y RUT del cliente')
+      return
+    }
     const token = localStorage.getItem('access')
     const payload = {
       ...quoteInfo,
@@ -305,3 +309,4 @@ function Cotizaciones() {
 }
 
 export default Cotizaciones
+
