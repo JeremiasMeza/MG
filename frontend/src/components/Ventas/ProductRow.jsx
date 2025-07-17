@@ -2,7 +2,6 @@
 function ProductRow({ product, quantity, onQuantityChange, onAdd }) {
   const isOutOfStock = product.stock === 0
   const isBelowMinimum = product.stock < product.stock_minimum
-  const isAtMinimum = product.stock === product.stock_minimum && product.stock > 0
 
   return (
     <div
@@ -33,8 +32,6 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd }) {
                 ? 'text-red-500'
                 : isBelowMinimum
                 ? 'text-orange-600'
-                : isAtMinimum
-                ? 'text-amber-500'
                 : 'text-green-600'
             }`}
           >

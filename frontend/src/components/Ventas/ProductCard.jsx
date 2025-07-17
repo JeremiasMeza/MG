@@ -1,7 +1,7 @@
 // src/components/ventas/ProductCard.jsx
 function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
   const isOutOfStock = product.stock === 0
-  const isLowStock = product.stock <= 5 && product.stock > 0
+  const isBelowMinimum = product.stock < product.stock_minimum
 
   return (
     <div className={`group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] overflow-hidden ${
@@ -13,8 +13,8 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
           Sin stock
         </div>
       )}
-      {isLowStock && (
-        <div className="absolute top-2 right-2 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-medium z-10">
+      {isBelowMinimum && (
+        <div className="absolute top-2 right-2 bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-medium z-10">
           Stock bajo
         </div>
       )}
@@ -41,9 +41,11 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd }) {
           <div className="flex items-center space-x-1">
             <span className="text-xs text-gray-500">Stock:</span>
             <span className={`font-medium text-xs ${
-              isOutOfStock ? 'text-red-500' : 
-              isLowStock ? 'text-amber-500' : 
-              'text-green-600'
+              isOutOfStock
+                ? 'text-red-500'
+                : isBelowMinimum
+                ? 'text-orange-600'
+                : 'text-green-600'
             }`}>
               {product.stock}
             </span>
