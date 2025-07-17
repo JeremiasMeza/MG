@@ -113,7 +113,7 @@ function Ventas() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-3 py-4">
+      <div className="w-92% container mx-auto px-1 py-2">
         {/* Contenido Principal */}
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
           {/* Productos - 4 columnas */}
