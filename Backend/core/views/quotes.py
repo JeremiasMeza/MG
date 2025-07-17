@@ -20,7 +20,8 @@ class QuoteViewSet(viewsets.ModelViewSet):
     def export_pdf(self, request, pk=None):
         quote = self.get_object()
         template = get_template('quotes/pdf.html')
-        html = template.render({'quote': quote})
+        logo_path = os.path.join(settings.BASE_DIR, 'static', 'logo.png')
+        html = template.render({'quote': quote, 'logo_path': logo_path})
 
         folder_path = os.path.join(settings.MEDIA_ROOT, 'quotes')
         os.makedirs(folder_path, exist_ok=True)
