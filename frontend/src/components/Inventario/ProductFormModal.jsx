@@ -8,6 +8,7 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
     stock: 0,
     stock_minimum: 0,
     category: '',
+    image: null,
   })
 
   useEffect(() => {
@@ -18,20 +19,39 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
         stock: product.stock || 0,
         stock_minimum: product.stock_minimum || 0,
         category: product.category || '',
+        image: null,
       })
     } else {
-      setForm({ name: '', price: 0, stock: 0, stock_minimum: 0, category: '' })
+      setForm({
+        name: '',
+        price: 0,
+        stock: 0,
+        stock_minimum: 0,
+        category: '',
+        image: null,
+      })
     }
   }, [product])
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    if (name === 'image') {
+      setForm((prev) => ({ ...prev, image: e.target.files[0] }))
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(form)
+    const data = new FormData()
+    data.append('name', form.name)
+    data.append('price', form.price)
+    data.append('stock', form.stock)
+    data.append('stock_minimum', form.stock_minimum)
+    data.append('category', form.category)
+    if (form.image) data.append('image', form.image)
+    onSave(data)
   }
 
   if (!open) return null
@@ -105,8 +125,17 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="flex justify-end space-x-2 pt-2">
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Imagen</label>
+        <input
+          type="file"
+          name="image"
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded-md px-3 py-2"
+        />
+      </div>
+      <div className="flex justify-end space-x-2 pt-2">
             <button
               type="button"
               onClick={onClose}
