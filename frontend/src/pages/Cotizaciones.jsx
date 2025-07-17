@@ -23,6 +23,7 @@ function Cotizaciones() {
   })
   const [showQuotes, setShowQuotes] = useState(false)
   const [quotes, setQuotes] = useState([])
+  const [quotesSearch, setQuotesSearch] = useState('')
 
   useEffect(() => {
     const token = localStorage.getItem('access')
@@ -137,6 +138,12 @@ function Cotizaciones() {
       alert(err.message)
     }
   }
+
+  const filteredQuotes = quotes.filter((q) =>
+    q.id.toString().includes(quotesSearch) ||
+    q.client_name.toLowerCase().includes(quotesSearch.toLowerCase()) ||
+    (q.client_rut && q.client_rut.toLowerCase().includes(quotesSearch.toLowerCase()))
+  )
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -276,31 +283,126 @@ function Cotizaciones() {
       </div>
 
       {showQuotes && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-11/12 h-5/6 p-4 flex flex-col">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="font-medium text-lg">Cotizaciones</h3>
-              <button onClick={() => setShowQuotes(false)} className="px-2 py-1 bg-red-500 text-white rounded">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex justify-between items-center">
+              <div>
+                <h3 className="text-xl font-semibold">Cotizaciones Generadas</h3>
+                <p className="text-blue-100 text-sm mt-1">
+                  Total: {quotes.length} cotizacion{quotes.length !== 1 ? 'es' : ''}
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowQuotes(false)} 
+                className="bg-white/10 hover:bg-white/20 text-white rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200 flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
                 Cerrar
               </button>
             </div>
-            <div className="flex flex-1 gap-4 overflow-hidden">
-              <div className="w-1/3 overflow-y-auto border-r pr-2">
-                <ul className="space-y-1">
-                  {quotes.map((q) => (
-                    <li
+
+            {/* Buscador */}
+            <div className="p-4 border-b border-gray-200 bg-white">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Buscar por número, nombre o RUT..."
+                  className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
+                  value={quotesSearch}
+                  onChange={(e) => setQuotesSearch(e.target.value)}
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Lista de cotizaciones */}
+            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+              {filteredQuotes.length > 0 ? (
+                <div className="space-y-2">
+                  {filteredQuotes.map((q) => (
+                    <div
                       key={q.id}
-                      className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                      className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md hover:border-blue-300 cursor-pointer transition-all duration-200 group"
                       onClick={() => openQuote(q.id)}
                     >
-                      #{q.id} - {q.client_name}
-                    </li>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              #{q.id}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(q.created_at || Date.now()).toLocaleDateString('es-ES', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                              })}
+                            </span>
+                          </div>
+                          
+                          <h5 className="font-medium text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                            {q.client_name}
+                          </h5>
+                          
+                          <div className="text-sm text-gray-600 space-y-1">
+                            <div className="flex items-center gap-2">
+                              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-4 0V5a2 2 0 014 0v1" />
+                              </svg>
+                              <span>{q.client_rut}</span>
+                            </div>
+                            {q.client_email && (
+                              <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <span>{q.client_email}</span>
+                              </div>
+                            )}
+                            {q.total && (
+                              <div className="flex items-center gap-2 mt-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                </svg>
+                                <span className="font-medium text-green-600 text-base">
+                                  ${q.total?.toLocaleString('es-ES') || '0'}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center text-gray-400 group-hover:text-blue-500 transition-colors">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </ul>
-              </div>
-              <div className="flex-1 flex items-center justify-center text-gray-400">
-                Selecciona una cotización para descargar
-              </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-gray-400 mb-3">
+                    <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-500 text-base">
+                    {quotesSearch ? 'No se encontraron cotizaciones' : 'No hay cotizaciones generadas'}
+                  </p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    {quotesSearch ? 'Intenta cambiar el término de búsqueda' : 'Las cotizaciones aparecerán aquí una vez que las generes'}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -310,4 +412,3 @@ function Cotizaciones() {
 }
 
 export default Cotizaciones
-
