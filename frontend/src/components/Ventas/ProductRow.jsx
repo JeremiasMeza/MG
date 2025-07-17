@@ -1,5 +1,5 @@
 // src/components/ventas/ProductRow.jsx
-function ProductRow({ product, quantity, onQuantityChange, onAdd }) {
+function ProductRow({ product, quantity, onQuantityChange, onAdd, onShowDetails }) {
   const isOutOfStock = product.stock === 0
   const isBelowMinimum = product.stock < product.stock_minimum
 
@@ -23,7 +23,10 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd }) {
       </div>
       {/* Información */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-medium text-sm text-gray-900 truncate">{product.name}</h3>
+        <h3 className="font-medium text-sm text-gray-900 truncate mb-0.5">{product.name}</h3>
+        {product.barcode && (
+          <p className="text-xs text-gray-500 truncate mb-1">Cod: {product.barcode}</p>
+        )}
         <div className="flex items-center space-x-2 text-xs">
           <span className="text-gray-500">Stock:</span>
           <span
@@ -93,6 +96,14 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
           <span className="text-xs">Agregar</span>
+        </button>
+
+        <button
+          onClick={onShowDetails}
+          className="text-xs text-blue-600 hover:underline"
+          type="button"
+        >
+          Ver detalles
         </button>
       </div>
     </div>

@@ -24,7 +24,10 @@ function InventoryRow({ product, onEdit, onDelete }) {
       
       {/* Información */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-medium text-sm text-gray-900 truncate">{product.name}</h3>
+        <h3 className="font-medium text-sm text-gray-900 truncate mb-0.5">{product.name}</h3>
+        {product.barcode && (
+          <p className="text-xs text-gray-500 truncate mb-1">Cod: {product.barcode}</p>
+        )}
         <div className="flex items-center space-x-2 text-xs">
           <span className="text-gray-500">Stock:</span>
           <span
