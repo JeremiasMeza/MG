@@ -15,10 +15,31 @@ function Inventario() {
   const token = localStorage.getItem('access')
   const authHeaders = { Authorization: `Bearer ${token}` }
 
+  const fetchAllProducts = async (url) => {
+    const items = []
+    let next = url
+    while (next) {
+      const resp = await fetch(next, { headers: authHeaders })
+      const data = await resp.json()
+      if (Array.isArray(data)) {
+        items.push(...data)
+        break
+      }
+      if (data.results) {
+        items.push(...data.results)
+        next = data.next
+      } else {
+        items.push(...data)
+        next = null
+      }
+    }
+    return items
+  }
+
   const fetchData = () => {
     setLoading(true)
     Promise.all([
-      fetch('http://192.168.1.52:8000/api/products/', { headers: authHeaders }).then((r) => r.json()),
+      fetchAllProducts('http://192.168.1.52:8000/api/products/'),
       fetch('http://192.168.1.52:8000/api/categories/', {
         headers: authHeaders,
       }).then((r) => r.json()),
