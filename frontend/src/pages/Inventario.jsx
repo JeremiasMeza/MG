@@ -110,12 +110,12 @@ function Inventario() {
             <p className="text-gray-600 mt-1">Gestión de productos y stock</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="bg-white px-4 py-2 rounded-lg shadow-sm border">
+            <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
               <span className="text-sm text-gray-600">Total productos: </span>
               <span className="font-semibold text-gray-800">{products.length}</span>
             </div>
             {lowStockCount > 0 && (
-              <div className="bg-red-50 border border-red-200 px-4 py-2 rounded-lg">
+              <div className="bg-red-50 px-4 py-2 rounded-lg">
                 <span className="text-sm text-red-600">Stock bajo: </span>
                 <span className="font-semibold text-red-700">{lowStockCount}</span>
               </div>
@@ -124,7 +124,7 @@ function Inventario() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border">
+        <div className="bg-white p-6 rounded-xl shadow-sm">
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-64">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -163,7 +163,7 @@ function Inventario() {
             </div>
 
             <div className="flex items-center">
-              <div className="flex items-center h-12 px-4 bg-gray-50 rounded-lg border">
+              <div className="flex items-center h-12 px-4 bg-gray-50 rounded-lg">
                 <input
                   id="low"
                   type="checkbox"
@@ -193,10 +193,10 @@ function Inventario() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="bg-white rounded-xl shadow-sm border">
+      {/* Content - Contenedor con altura fija */}
+      <div className="bg-white rounded-xl shadow-sm h-[600px] flex flex-col">
         {loading ? (
-          <div className="flex items-center justify-center py-16">
+          <div className="flex items-center justify-center flex-1">
             <div className="flex items-center gap-3">
               <svg className="animate-spin w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -206,11 +206,11 @@ function Inventario() {
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
+          <>
             {filtered.length > 0 ? (
               <>
-                {/* Table Header */}
-                <div className="px-6 py-4 bg-gray-50 rounded-t-xl">
+                {/* Table Header - Fijo */}
+                <div className="px-6 py-4 bg-gray-50 rounded-t-xl flex-shrink-0">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-gray-800">
                       Productos ({filtered.length})
@@ -230,53 +230,57 @@ function Inventario() {
                   </div>
                 </div>
 
-                {/* Products List */}
-                <div className="divide-y divide-gray-200">
-                  {filtered.map((p) => (
-                    <InventoryRow
-                      key={p.id}
-                      product={p}
-                      onEdit={(prod) => {
-                        setEditing(prod)
-                        setModalOpen(true)
-                      }}
-                      onDelete={handleDelete}
-                    />
-                  ))}
+                {/* Products List - Scrollable */}
+                <div className="flex-1 overflow-y-auto px-6">
+                  <div className="divide-y divide-gray-200">
+                    {filtered.map((p) => (
+                      <InventoryRow
+                        key={p.id}
+                        product={p}
+                        onEdit={(prod) => {
+                          setEditing(prod)
+                          setModalOpen(true)
+                        }}
+                        onDelete={handleDelete}
+                      />
+                    ))}
+                  </div>
                 </div>
               </>
             ) : (
-              <div className="px-6 py-16 text-center">
-                <div className="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-800 mb-2">
-                  No se encontraron productos
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {query || categoryFilter || onlyLow 
-                    ? 'Intenta ajustar los filtros de búsqueda' 
-                    : 'Comienza agregando tu primer producto'}
-                </p>
-                {!query && !categoryFilter && !onlyLow && (
-                  <button
-                    onClick={() => {
-                      setEditing(null)
-                      setModalOpen(true)
-                    }}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center px-6 py-16">
+                  <div className="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                    <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                     </svg>
-                    Agregar producto
-                  </button>
-                )}
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">
+                    No se encontraron productos
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    {query || categoryFilter || onlyLow 
+                      ? 'Intenta ajustar los filtros de búsqueda' 
+                      : 'Comienza agregando tu primer producto'}
+                  </p>
+                  {!query && !categoryFilter && !onlyLow && (
+                    <button
+                      onClick={() => {
+                        setEditing(null)
+                        setModalOpen(true)
+                      }}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Agregar producto
+                    </button>
+                  )}
+                </div>
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
 

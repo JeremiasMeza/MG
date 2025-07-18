@@ -137,15 +137,15 @@ function Ventas() {
   }, [products])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="w-92% container mx-auto px-1 py-2">
+    <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
+      <div className="w-92% container mx-auto px-1 py-2 h-full">
         {/* Contenido Principal */}
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 h-full">
           {/* Productos - 4 columnas */}
-          <div className="xl:col-span-4">
-            <div className="bg-white rounded-xl shadow-lg p-4">
+          <div className="xl:col-span-4 h-full">
+            <div className="bg-white rounded-xl shadow-lg p-4 h-full max-h-screen overflow-y-auto flex flex-col">
               {/* Filtros y Búsqueda */}
-              <div className="flex flex-col lg:flex-row gap-3 mb-4">
+              <div className="flex flex-col lg:flex-row gap-3 mb-4 flex-shrink-0">
                 {/* Selector de categoría */}
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -188,7 +188,7 @@ function Ventas() {
               </div>
 
               {/* Vista */}
-              <div className="mb-4 flex items-center justify-between text-xs text-gray-600">
+              <div className="mb-4 flex items-center justify-between text-xs text-gray-600 flex-shrink-0">
                 <span>
                   {filtered.length} producto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
                 </span>
@@ -219,10 +219,11 @@ function Ventas() {
                 </span>
               </div>
               
-              <div>
+              {/* Área de productos con altura definida */}
+              <div className="h-170 overflow-hidden">
                 {productsToShow.length > 0 ? (
                   viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3 h-full content-start">
                       {productsToShow.map((p) => (
                         <ProductCard
                           key={p.id}
@@ -235,7 +236,7 @@ function Ventas() {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2 h-full overflow-y-auto">
                       {productsToShow.map((p) => (
                         <ProductRow
                           key={p.id}
@@ -249,7 +250,7 @@ function Ventas() {
                     </div>
                   )
                 ) : (
-                  <div className="text-center py-12">
+                  <div className="text-center h-full flex flex-col items-center justify-center">
                     <div className="text-gray-400 mb-3">
                       <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -265,7 +266,7 @@ function Ventas() {
 
               {/* Paginación */}
               {pageCount > 1 && (
-                <div className="mt-4 border-t pt-4">
+                <div className="mt-4 border-t pt-4 flex-shrink-0">
                   <Pagination page={page} totalPages={pageCount} onPageChange={setPage} />
                 </div>
               )}
@@ -273,8 +274,8 @@ function Ventas() {
           </div>
 
           {/* Carrito - 1 columna */}
-          <div className="xl:col-span-1">
-            <div className="sticky top-4">
+          <div className="xl:col-span-1 h-full">
+            <div className="sticky top-4 h-full">
               <CartSummary
                 cart={cart}
                 onRemove={handleRemove}
