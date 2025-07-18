@@ -108,10 +108,33 @@ function Ventas() {
       alert('Venta registrada')
       setCart([])
       setQtyMap({})
-    } catch (err) {
-      alert(err.message)
-    }
+  } catch (err) {
+    alert(err.message)
   }
+}
+
+  useEffect(() => {
+    let buffer = ''
+    let last = Date.now()
+    const handler = (e) => {
+      const active = document.activeElement
+      if (active && ['INPUT', 'TEXTAREA'].includes(active.tagName)) return
+      const now = Date.now()
+      if (now - last > 100) buffer = ''
+      if (e.key === 'Enter') {
+        if (buffer) {
+          const prod = products.find((p) => p.barcode === buffer)
+          if (prod) handleAdd(prod)
+        }
+        buffer = ''
+      } else {
+        buffer += e.key
+      }
+      last = now
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [products])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
