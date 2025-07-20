@@ -395,8 +395,13 @@ function Dashboard() {
                 {summary.low_stock_products.length > 0 ? (
                   <ul className="space-y-2">
                     {summary.low_stock_products.map((p) => (
-                      <li key={p.id} className="flex justify-between items-center">
-                        <span className="text-sm text-gray-700">{p.name}</span>
+                      <li key={p.id} className="flex justify-between items-start">
+                        <div>
+                          <p className="text-sm text-gray-700">{p.name}</p>
+                          {p.barcode && (
+                            <p className="text-xs text-gray-500">Cod: {p.barcode}</p>
+                          )}
+                        </div>
                         <span className="text-sm text-orange-600 font-medium">
                           {p.stock}/{p.stock_minimum}
                         </span>

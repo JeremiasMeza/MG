@@ -158,8 +158,15 @@ function Inventario() {
               <h4 className="font-medium text-gray-800 mb-2">Detalles</h4>
               <ul className="space-y-1 max-h-60 overflow-y-auto text-sm">
                 {selectedSale.details.map((d, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>{productMap[d.product_id]?.name || `Producto ${d.product_id}`}</span>
+                  <li key={i} className="flex justify-between items-start">
+                    <div>
+                      <p>{productMap[d.product_id]?.name || `Producto ${d.product_id}`}</p>
+                      {productMap[d.product_id]?.barcode && (
+                        <p className="text-xs text-gray-500">
+                          Cod: {productMap[d.product_id].barcode}
+                        </p>
+                      )}
+                    </div>
                     <span className="text-gray-700">x{d.quantity}</span>
                   </li>
                 ))}
