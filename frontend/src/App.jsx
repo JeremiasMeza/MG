@@ -6,6 +6,10 @@ import Dashboard from './pages/Dashboard.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Ventas from './pages/Ventas.jsx'
 import Reportes from './pages/Reportes.jsx'
+import Categorias from './pages/Categorias.jsx'
+import ReportesVentas from './pages/ReportesVentas.jsx'
+import ReportesInventario from './pages/ReportesInventario.jsx'
+import ReportesFinanciero from './pages/ReportesFinanciero.jsx'
 import Cotizaciones from './pages/Cotizaciones.jsx'
 
 function App() {
@@ -94,8 +98,12 @@ function App() {
         <Route element={<Layout user={user} onLogout={handleLogout} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventario" element={<Inventario />} />
+          <Route path="/inventario/categorias" element={<Categorias />} />
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/reportes" element={<Reportes />} />
+          <Route path="/reportes/ventas" element={<ReportesVentas />} />
+          <Route path="/reportes/inventario" element={<ReportesInventario />} />
+          <Route path="/reportes/financiero" element={<ReportesFinanciero />} />
           <Route path="/cotizaciones" element={<Cotizaciones />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
