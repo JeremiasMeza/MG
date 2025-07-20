@@ -108,10 +108,10 @@ function Ventas() {
       alert('Venta registrada')
       setCart([])
       setQtyMap({})
-  } catch (err) {
-    alert(err.message)
+    } catch (err) {
+      alert(err.message)
+    }
   }
-}
 
   useEffect(() => {
     let buffer = ''
@@ -137,120 +137,130 @@ function Ventas() {
   }, [products])
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
-      <div className="w-92% container mx-auto px-1 py-2 h-full">
-        {/* Contenido Principal */}
+    <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 overflow-hidden">
+      {/* Contenedor principal con altura de viewport completa */}
+      <div className="h-full max-w-full mx-auto">
+        {/* Grid principal con altura calculada exacta */}
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 h-full">
-          {/* Productos - 4 columnas */}
-          <div className="xl:col-span-4 h-full">
-            <div className="bg-white rounded-xl shadow-lg p-4 h-full max-h-screen overflow-y-auto flex flex-col">
-              {/* Filtros y Búsqueda */}
-              <div className="flex flex-col lg:flex-row gap-3 mb-4 flex-shrink-0">
-                {/* Selector de categoría */}
-                <div className="flex-1">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Categoría
-                  </label>
-                  <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                  >
-                    <option value="">Todas las categorías</option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          
+          {/* Sección de Productos - 4 columnas */}
+          <div className="xl:col-span-4 flex flex-col h-full min-h-0">
+            <div className="bg-white rounded-xl shadow-lg h-full flex flex-col overflow-hidden">
+              
+              {/* Header con filtros - altura fija */}
+              <div className="flex-shrink-0 p-4 border-b border-gray-100">
+                {/* Filtros y Búsqueda */}
+                <div className="flex flex-col lg:flex-row gap-3 mb-3">
+                  {/* Selector de categoría */}
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Categoría
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                    >
+                      <option value="">Todas las categorías</option>
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                {/* Búsqueda */}
-                <div className="flex-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Buscar producto
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Buscar por nombre o código de barras..."
-                      className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                    />
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
+                  {/* Búsqueda */}
+                  <div className="flex-2">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Buscar producto
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Buscar por nombre o código de barras..."
+                        className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Vista */}
-              <div className="mb-4 flex items-center justify-between text-xs text-gray-600 flex-shrink-0">
-                <span>
-                  {filtered.length} producto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`px-2 py-1 rounded-md border text-xs ${
-                      viewMode === 'grid'
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-white text-gray-600 border-gray-300'
-                    }`}
-                  >
-                    Cards
-                  </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    className={`px-2 py-1 rounded-md border text-xs ${
-                      viewMode === 'list'
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-white text-gray-600 border-gray-300'
-                    }`}
-                  >
-                    Lista
-                  </button>
+                {/* Barra de herramientas */}
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>
+                    {filtered.length} producto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setViewMode('grid')}
+                      className={`px-3 py-1 rounded-md border text-xs transition-colors ${
+                        viewMode === 'grid'
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      Cards
+                    </button>
+                    <button
+                      onClick={() => setViewMode('list')}
+                      className={`px-3 py-1 rounded-md border text-xs transition-colors ${
+                        viewMode === 'list'
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      Lista
+                    </button>
+                  </div>
+                  <span>
+                    Página {page} de {pageCount}
+                  </span>
                 </div>
-                <span className="ml-auto">
-                  Página {page} de {pageCount}
-                </span>
               </div>
               
-              {/* Área de productos con altura definida */}
-              <div className="h-170 overflow-hidden">
+              {/* Área de productos - altura flexible con scroll */}
+              <div className="flex-1 min-h-0 p-4 pt-3">
                 {productsToShow.length > 0 ? (
                   viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3 h-full content-start">
-                      {productsToShow.map((p) => (
-                        <ProductCard
-                          key={p.id}
-                          product={p}
-                          quantity={qtyMap[p.id] || 1}
-                          onQuantityChange={(val) => handleQtyChange(p.id, val)}
-                          onAdd={() => handleAdd(p)}
-                          onShowDetails={() => setDetailProduct(p)}
-                        />
-                      ))}
+                    <div className="h-full overflow-y-auto">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 pb-2">
+                        {productsToShow.map((p) => (
+                          <ProductCard
+                            key={p.id}
+                            product={p}
+                            quantity={qtyMap[p.id] || 1}
+                            onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                            onAdd={() => handleAdd(p)}
+                            onShowDetails={() => setDetailProduct(p)}
+                          />
+                        ))}
+                      </div>
                     </div>
                   ) : (
-                    <div className="space-y-2 h-full overflow-y-auto">
-                      {productsToShow.map((p) => (
-                        <ProductRow
-                          key={p.id}
-                          product={p}
-                          quantity={qtyMap[p.id] || 1}
-                          onQuantityChange={(val) => handleQtyChange(p.id, val)}
-                          onAdd={() => handleAdd(p)}
-                          onShowDetails={() => setDetailProduct(p)}
-                        />
-                      ))}
+                    <div className="h-full overflow-y-auto">
+                      <div className="space-y-2 pb-2">
+                        {productsToShow.map((p) => (
+                          <ProductRow
+                            key={p.id}
+                            product={p}
+                            quantity={qtyMap[p.id] || 1}
+                            onQuantityChange={(val) => handleQtyChange(p.id, val)}
+                            onAdd={() => handleAdd(p)}
+                            onShowDetails={() => setDetailProduct(p)}
+                          />
+                        ))}
+                      </div>
                     </div>
                   )
                 ) : (
-                  <div className="text-center h-full flex flex-col items-center justify-center">
+                  <div className="h-full flex flex-col items-center justify-center text-center">
                     <div className="text-gray-400 mb-3">
                       <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -264,18 +274,18 @@ function Ventas() {
                 )}
               </div>
 
-              {/* Paginación */}
+              {/* Footer con paginación - altura fija */}
               {pageCount > 1 && (
-                <div className="mt-4 border-t pt-4 flex-shrink-0">
+                <div className="flex-shrink-0 p-4 pt-2 border-t border-gray-100">
                   <Pagination page={page} totalPages={pageCount} onPageChange={setPage} />
                 </div>
               )}
             </div>
           </div>
 
-          {/* Carrito - 1 columna */}
-          <div className="xl:col-span-1 h-full">
-            <div className="sticky top-4 h-full">
+          {/* Sección del Carrito - 1 columna */}
+          <div className="xl:col-span-1 flex flex-col h-full min-h-0">
+            <div className="bg-white rounded-xl shadow-lg h-full overflow-hidden">
               <CartSummary
                 cart={cart}
                 onRemove={handleRemove}
@@ -288,6 +298,8 @@ function Ventas() {
           </div>
         </div>
       </div>
+
+      {/* Modal de detalles */}
       <ProductDetailModal
         open={!!detailProduct}
         product={detailProduct}

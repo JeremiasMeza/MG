@@ -5,12 +5,12 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd, onShowDetails 
 
   return (
     <div
-      className={`flex items-center space-x-2 bg-white rounded-lg shadow p-2 ${
+      className={`flex items-center space-x-2 bg-white rounded-lg shadow p-2 h-16 ${
         isOutOfStock ? 'opacity-60' : ''
       }`}
     >
-      {/* Imagen más pequeña */}
-      <div className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded">
+      {/* Imagen más pequeña - tamaño fijo */}
+      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-gray-50 rounded">
         <img
           src={product.image}
           alt={product.name}
@@ -53,8 +53,8 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd, onShowDetails 
         </div>
       </div>
 
-      {/* Controles más compactos */}
-      <div className="flex items-center space-x-1">
+      {/* Controles más compactos - tamaño fijo */}
+      <div className="flex items-center space-x-1 flex-shrink-0">
         <div className="flex items-center border border-gray-300 rounded overflow-hidden">
           <button
             onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
@@ -94,7 +94,7 @@ function ProductRow({ product, quantity, onQuantityChange, onAdd, onShowDetails 
           className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-all duration-200 ${
             isOutOfStock || quantity > product.stock
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95'
+              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md hover:shadow-lg'
           }`}
         >
           <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

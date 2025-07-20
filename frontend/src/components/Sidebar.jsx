@@ -1,14 +1,45 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 
 function Sidebar({ user, onLogout }) {
+  const [openSubmenu, setOpenSubmenu] = useState(null)
+  const location = useLocation()
+
+  // Función para verificar si el enlace principal está activo
+  const isMainLinkActive = (link) => {
+    if (!link.submenus) {
+      return location.pathname === link.to
+    }
+    // Para enlaces con submenús, verificar si la ruta actual empieza con el path base
+    return location.pathname.startsWith(link.to)
+  }
+
   const links = [
     { to: '/dashboard', label: 'Dashboard' },
-    { to: '/inventario', label: 'Inventario' },
+    { 
+      to: '/inventario', 
+      label: 'Inventario',
+      submenus: [
+        { to: '/inventario', label: 'Productos' },
+        { to: '/inventario/categorias', label: 'Categorías' }
+      ]
+    },
     { to: '/ventas', label: 'Ventas' },
-    { to: '/reportes', label: 'Reportes' },
+    { 
+      to: '/reportes', 
+      label: 'Reportes',
+      submenus: [
+        { to: '/reportes/ventas', label: 'Reporte de Ventas' },
+        { to: '/reportes/inventario', label: 'Reporte de Inventario' },
+        { to: '/reportes/financiero', label: 'Reporte Financiero' }
+      ]
+    },
     { to: '/cotizaciones', label: 'Cotizaciones' },
   ]
+
+  const toggleSubmenu = (index) => {
+    setOpenSubmenu(openSubmenu === index ? null : index)
+  }
 
   return (
     <div className="flex flex-col h-full w-64 bg-slate-900 text-white shadow-xl">
@@ -18,21 +49,66 @@ function Sidebar({ user, onLogout }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            className={({ isActive }) =>
-              `block px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-800 hover:scale-105 hover:shadow-md ${
-                isActive 
-                  ? 'bg-blue-600 text-white shadow-lg border-l-4 border-blue-400' 
-                  : 'text-slate-300 hover:text-white'
-              }`
-            }
-          >
-            {link.label}
-          </NavLink>
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        {links.map((link, index) => (
+          <div key={link.to}>
+            {/* Enlace principal */}
+            <div className="flex items-center">
+              <NavLink
+                to={link.to}
+                onClick={(e) => {
+                  if (link.submenus) {
+                    // No prevenir la navegación, permitir ir al enlace principal
+                    toggleSubmenu(index)
+                  }
+                }}
+                className={() =>
+                  `block px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-800 hover:scale-105 hover:shadow-md flex-1 ${
+                    isMainLinkActive(link)
+                      ? 'bg-blue-600 text-white shadow-lg border-l-4 border-blue-400' 
+                      : 'text-slate-300 hover:text-white'
+                  }`
+                }
+              >
+                <div className="flex items-center justify-between">
+                  <span>{link.label}</span>
+                  {link.submenus && (
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        openSubmenu === index ? 'rotate-180' : ''
+                      }`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  )}
+                </div>
+              </NavLink>
+            </div>
+
+            {/* Submenús */}
+            {link.submenus && openSubmenu === index && (
+              <div className="ml-4 mt-2 space-y-1 border-l-2 border-slate-700 pl-4">
+                {link.submenus.map((submenu) => (
+                  <NavLink
+                    key={submenu.to}
+                    to={submenu.to}
+                    className={({ isActive }) =>
+                      `block px-3 py-2 rounded-md text-sm transition-all duration-200 hover:bg-slate-800 ${
+                        isActive 
+                          ? 'bg-blue-600 text-white shadow-md' 
+                          : 'text-slate-400 hover:text-white'
+                      }`
+                    }
+                  >
+                    {submenu.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </nav>
 
