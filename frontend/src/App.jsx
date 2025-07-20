@@ -4,6 +4,7 @@ import Login from './pages/Login.jsx'
 import Layout from './components/Layout.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Inventario from './pages/Inventario.jsx'
+import Productos from './pages/Productos.jsx'
 import Ventas from './pages/Ventas.jsx'
 import Reportes from './pages/Reportes.jsx'
 import Categorias from './pages/Categorias.jsx'
@@ -98,6 +99,7 @@ function App() {
         <Route element={<Layout user={user} onLogout={handleLogout} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventario" element={<Inventario />} />
+          <Route path="/inventario/productos" element={<Productos />} />
           <Route path="/inventario/categorias" element={<Categorias />} />
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/reportes" element={<Reportes />} />
