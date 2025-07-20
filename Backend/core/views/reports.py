@@ -59,7 +59,7 @@ class SalesSummaryReportView(APIView):
         # Productos con stock bajo
         low_stock = (
             Product.objects.filter(stock__lt=F('stock_minimum'))
-            .values('id', 'name', 'stock', 'stock_minimum')
+            .values('id', 'name', 'barcode', 'stock', 'stock_minimum')
         )
 
         # Ventas diarias para gráficos
