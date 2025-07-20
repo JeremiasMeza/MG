@@ -115,7 +115,7 @@ function Productos() {
               <div className="flex-shrink-0 p-4 border-b border-gray-100">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Inventario</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">Productos/Inventario</h1>
                     <p className="text-gray-600 text-sm mt-1">Gestión de productos y stock</p>
                   </div>
                   <div className="flex items-center gap-3">
