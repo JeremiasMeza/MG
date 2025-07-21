@@ -29,9 +29,9 @@ function Sidebar({ user, onLogout }) {
     return link.submenus.some(submenu => location.pathname === submenu.to)
   }
 
-  const links = [
-    { 
-      to: '/dashboard', 
+  const allLinks = [
+    {
+      to: '/dashboard',
       label: 'Dashboard',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,6 +126,20 @@ function Sidebar({ user, onLogout }) {
       )
     },
   ]
+  const regularLinks = allLinks.filter((l) => ['inventario', 'ventas', 'cotizaciones'].some(p => l.to.startsWith('/' + p)))
+
+  const links = user?.is_superuser ? [...allLinks] : [...regularLinks]
+  if (user?.is_superuser) {
+    links.push({
+      to: '/usuarios',
+      label: 'Usuarios',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+      )
+    })
+  }
 
   const toggleSubmenu = (index, e) => {
     // Solo prevenir navegación si se hace click en la flecha
@@ -245,7 +259,9 @@ function Sidebar({ user, onLogout }) {
             <p className="text-sm font-medium text-slate-200 truncate">
               {user?.username || 'Usuario'}
             </p>
-            <p className="text-xs text-slate-400">Administrador</p>
+            <p className="text-xs text-slate-400">
+              {user?.is_superuser ? 'Super Administrador' : 'Recepcionista'}
+            </p>
           </div>
         </div>
         
