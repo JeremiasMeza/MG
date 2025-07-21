@@ -22,11 +22,11 @@ function ProductCard({ product, quantity, onQuantityChange, onAdd, onShowDetails
       {/* Imagen del producto - altura más compacta */}
       <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 h-28 flex-shrink-0 overflow-hidden cursor-pointer" onClick={onShowDetails}>
         <img
-          src={product.image}
+          src={product.image || '/images/product-placeholder.svg'}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           onError={(e) => {
-            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDdMMTYgM0g4TDQgN1YxN0E0IDQgMCAwIDAgOCAyMUgxNkE0IDQgMCAwIDAgMjAgMTdWN1oiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTkgMTFBMyAzIDAgMCAwIDE1IDExIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo='
+            e.target.src = '/images/product-placeholder.svg'
           }}
         />
         {/* Overlay sutil para mejorar legibilidad del badge */}
