@@ -2,13 +2,15 @@
 <html>
 <head>
   <meta charset="utf-8">
-  {% load static %}
+  
   <style>
+    /* ===== CONFIGURACIÓN DE IMPRESIÓN ===== */
     @page {
       size: A4;
       margin: 25mm;
     }
     
+    /* ===== ESTILOS GENERALES DEL CUERPO ===== */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-size: 12px;
@@ -19,6 +21,7 @@
       background-color: #fff;
     }
     
+    /* ===== ENCABEZADO PRINCIPAL ===== */
     .header {
       display: flex;
       justify-content: space-between;
@@ -29,41 +32,48 @@
       min-height: 80px;
     }
     
+    /* ===== INFORMACIÓN DE LA EMPRESA - SOLUCIÓN CORREGIDA ===== */
     .company-info {
       flex: 1;
+      display: flex;
+      align-items: flex-start; /* CLAVE: Ambos elementos se alinean arriba */
+      gap: 20px; /* Espacio entre logo y texto */
       padding-right: 20px;
     }
     
+    /* ===== CONTENEDOR DEL LOGO ===== */
+    .logo-container {
+      flex-shrink: 0; /* No se reduce */
+      display: flex;
+      align-items: flex-start; /* Alinear arriba */
+    }
+    
+    /* ===== LOGO DE LA EMPRESA ===== */
+    .company-logo {
+      width: 100px;
+      height: auto;
+      max-height: 70px;
+      object-fit: contain;
+      display: block; /* CLAVE: Eliminar espacios extra */
+    }
+    
+    /* ===== CONTENEDOR DE DETALLES ===== */
+    .company-details-container {
+      flex: 1;
+      display: flex;
+      align-items: flex-start; /* Alinear arriba */
+    }
+    
+    /* ===== DETALLES DE LA EMPRESA ===== */
     .company-details {
       font-size: 11px;
       color: #666;
       line-height: 1.4;
-      margin: 0;
+      margin: 0; /* CLAVE: Sin márgenes que desalineen */
+      padding: 0; /* CLAVE: Sin padding que desalinee */
     }
     
-    .logo-container {
-      flex-shrink: 0;
-      width: 120px;
-      text-align: right;
-      margin-top: 0;
-    }
-    
-    .company-logo {
-      width: 100px;
-      height: auto;
-      max-height: 70px;
-      object-fit: contain;
-      margin-top: 0;
-      vertical-align: top;
-    }
-    
-    .company-logo {
-      width: 100px;
-      height: auto;
-      max-height: 70px;
-      object-fit: contain;
-    }
-    
+    /* ===== TÍTULO PRINCIPAL ===== */
     h1 {
       text-align: center;
       font-size: 24px;
@@ -74,6 +84,7 @@
       letter-spacing: 2px;
     }
     
+    /* ===== INFORMACIÓN DEL CLIENTE ===== */
     .client-info {
       background-color: #fafafa;
       border-radius: 4px;
@@ -94,6 +105,15 @@
       font-weight: 600;
     }
     
+    /* ===== INFORMACIÓN DE FECHA ===== */
+    .date-info {
+      text-align: right;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* ===== TABLAS GENERALES ===== */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -119,10 +139,6 @@
       font-size: 11px;
     }
     
-    tbody tr:hover {
-      background-color: #fafafa;
-    }
-    
     .text-right {
       text-align: right;
     }
@@ -131,6 +147,7 @@
       text-align: center;
     }
     
+    /* ===== SECCIÓN DE TOTALES ===== */
     .totals-section {
       margin-top: 25px;
       display: flex;
@@ -144,14 +161,6 @@
       border-radius: 6px;
       overflow: hidden;
       border: 1px solid #e0e0e0;
-    }
-    
-    .totals-table tr {
-      border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .totals-table tr:last-child {
-      border-bottom: none;
     }
     
     .totals-table td {
@@ -184,6 +193,7 @@
       border-bottom: none;
     }
     
+    /* ===== PIE DE PÁGINA ===== */
     .footer {
       margin-top: 35px;
       padding-top: 12px;
@@ -203,60 +213,45 @@
       font-weight: 600;
       margin-top: 15px;
     }
-    
-    .date-info {
-      text-align: right;
-      margin-bottom: 10px;
-      font-size: 11px;
-      color: #666;
-    }
-    
-    .page-break {
-      page-break-before: always;
-    }
-    
-    .header-repeat {
-      display: none;
-    }
-    
-    @media print {
-      .header-repeat {
-        display: block;
-      }
-      
-      body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
   </style>
 </head>
 <body>
+  <!-- ===== ENCABEZADO PRINCIPAL ===== -->
   <div class="header">
+    <!-- Información de la empresa (lado izquierdo) - ESTRUCTURA CORREGIDA -->
     <div class="company-info">
-      <img src="{{ logo_path }}" alt="Logo Empresa" class="company-logo">
-      <div class="company-details">
-        Dirección: Arturo Prat 15 Pahuil, Maule<br>
-        Teléfono: +56 9 82279511<br>
-        Email: contacto@muebleriageorge.cl<br>
-        RUT: 12.345.678-9
+      <!-- Contenedor del logo -->
+      <div class="logo-container">
+        <img src="{{ logo_path }}" alt="Logo Empresa" class="company-logo">
+      </div>
+      
+      <!-- Contenedor de los detalles -->
+      <div class="company-details-container">
+        <div class="company-details">
+          Dirección: Arturo Prat 15 Pahuil, Maule<br>
+          Teléfono: +56 9 82279511<br>
+          Email: contacto@muebleriageorge.cl<br>
+          RUT: 12.345.678-9
+        </div>
       </div>
     </div>
-
   </div>
   
-  <h1>Cotización #{{ quote.id }}</h1>
+  <!-- ===== TÍTULO DE LA COTIZACIÓN ===== -->
+  <h1>Cotización #28</h1>
   
+  <!-- ===== FECHA DE EMISIÓN ===== -->
   <div class="date-info">
-    <strong>Fecha de emisión:</strong> {{ quote.date_created|date:"d/m/Y" }}
+    <strong>Fecha de emisión:</strong> 20/07/2025
   </div>
   
+  <!-- ===== INFORMACIÓN DEL CLIENTE ===== -->
   <div class="client-info">
-    <p><strong>Cliente:</strong> {{ quote.client_name }}</p>
-    <p><strong>RUT:</strong> {{ quote.client_rut }}</p>
-    <p><strong>Email:</strong> {{ quote.client_email }}</p>
+    <p><strong>Cliente:</strong> Jere RUT: 123456789</p>
+    <p><strong>Email:</strong> yola1885@gmail.com</p>
   </div>
 
+  <!-- ===== TABLA DE PRODUCTOS ===== -->
   <table>
     <thead>
       <tr>
@@ -267,36 +262,35 @@
       </tr>
     </thead>
     <tbody>
-      {% for d in quote.details.all %}
-        <tr>
-          <td>{{ d.product.name }}</td>
-          <td class="text-center">{{ d.quantity }}</td>
-          <td class="text-right">${{ d.price_unit }}</td>
-          <td class="text-right">${{ d.subtotal }}</td>
-        </tr>
-      {% endfor %}
+      <tr>
+        <td>CAJA CHUQUICAMATA MEC</td>
+        <td class="text-center">1</td>
+        <td class="text-right">$1200.00</td>
+        <td class="text-right">$1200.00</td>
+      </tr>
     </tbody>
   </table>
 
+  <!-- ===== SECCIÓN DE TOTALES ===== -->
   <div class="totals-section">
     <table class="totals-table">
       <tr>
         <td class="label">Subtotal:</td>
-        <td class="value">${{ quote.subtotal }}</td>
+        <td class="value">$1200.00</td>
       </tr>
       <tr>
         <td class="label">IVA:</td>
-        <td class="value">${{ quote.iva }}</td>
+        <td class="value">$228.00</td>
       </tr>
       <tr class="total-row">
         <td class="label">TOTAL:</td>
-        <td class="value">${{ quote.total }}</td>
+        <td class="value">$1428.00</td>
       </tr>
     </table>
   </div>
   
+  <!-- ===== PIE DE PÁGINA ===== -->
   <div class="footer">
-    <p>Página <pdf:pagenumber> de <pdf:pagecount></p>
     <div class="validity-notice">
       Esta cotización es válida por 14 días desde la fecha de emisión
     </div>
