@@ -13,6 +13,7 @@ import ReportesInventario from './pages/ReportesInventario.jsx'
 import ReportesFinanciero from './pages/ReportesFinanciero.jsx'
 import Cotizaciones from './pages/Cotizaciones.jsx'
 import Usuarios from './pages/Usuarios.jsx'
+import ImportExport from './pages/ImportExport.jsx'
 
 function RequireSuperuser({ children, user }) {
   if (!user?.is_superuser) {
@@ -156,6 +157,14 @@ function App() {
             element={
               <RequireSuperuser user={user}>
                 <Usuarios />
+              </RequireSuperuser>
+            }
+          />
+          <Route
+            path="/import-export"
+            element={
+              <RequireSuperuser user={user}>
+                <ImportExport />
               </RequireSuperuser>
             }
           />

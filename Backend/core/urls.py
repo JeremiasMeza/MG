@@ -7,6 +7,7 @@ from core.views import (
     SalesSummaryReportView,
     CategoryViewSet,
     PaymentMethodViewSet,
+    ProductImportExportView,
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -21,4 +22,5 @@ router.register(r'payment-methods', PaymentMethodViewSet, basename='payment-meth
 urlpatterns = [
     path('', include(router.urls)),
     path('reports/summary/', SalesSummaryReportView.as_view(), name='sales-summary-report'),
+    path('import-export/', ProductImportExportView.as_view(), name='import-export'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
