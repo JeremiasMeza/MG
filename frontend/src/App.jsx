@@ -117,6 +117,7 @@ function App() {
           <Route path="/inventario/productos" element={<Productos />} />
           <Route path="/inventario/categorias" element={<Categorias />} />
           <Route path="/ventas" element={<Ventas />} />
+
           <Route
             path="/reportes"
             element={
@@ -159,6 +160,14 @@ function App() {
             }
           />
           <Route path="*" element={<Navigate to="/inventario" replace />} />
+
+          <Route path="/reportes" element={<Reportes />} />
+          <Route path="/reportes/ventas" element={<ReportesVentas />} />
+        <Route path="/reportes/inventario" element={<ReportesInventario />} />
+        <Route path="/reportes/financiero" element={<ReportesFinanciero />} />
+        <Route path="/cotizaciones" element={<Cotizaciones />} />
+        <Route path="/usuarios" element={<Usuarios />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>
