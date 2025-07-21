@@ -23,6 +23,7 @@ function Login({ onSuccess }) {
       const data = await resp.json()
       localStorage.setItem('access', data.access)
       localStorage.setItem('refresh', data.refresh)
+      localStorage.setItem('user', JSON.stringify(data.user))
       if (onSuccess) onSuccess(data.user, data.access)
     } catch (err) {
       setError(err.message)

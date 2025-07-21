@@ -23,12 +23,16 @@ function RequireSuperuser({ children, user }) {
 }
 
 function App() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('user')
+    return stored ? JSON.parse(stored) : null
+  })
   const [token, setToken] = useState(localStorage.getItem('access') || '')
 
   const handleLogin = (u, t) => {
     setUser(u)
     setToken(t)
+    localStorage.setItem('user', JSON.stringify(u))
   }
 
   const handleLogout = () => {
@@ -36,6 +40,7 @@ function App() {
     setToken('')
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
+    localStorage.removeItem('user')
   }
 
   const refreshToken = async () => {
