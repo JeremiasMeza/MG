@@ -62,5 +62,6 @@ class UserLoginSerializer(TokenObtainPairSerializer):
             'username': self.user.username,
             'email': self.user.email,
             'role': self.user.role,
+            'is_superuser': self.user.is_superuser,
         }
         return data

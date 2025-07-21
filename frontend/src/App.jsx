@@ -14,6 +14,13 @@ import ReportesFinanciero from './pages/ReportesFinanciero.jsx'
 import Cotizaciones from './pages/Cotizaciones.jsx'
 import Usuarios from './pages/Usuarios.jsx'
 
+function RequireSuperuser({ children, user }) {
+  if (!user?.is_superuser) {
+    return <Navigate to="/inventario" replace />
+  }
+  return children
+}
+
 function App() {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(localStorage.getItem('access') || '')
@@ -98,11 +105,62 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout user={user} onLogout={handleLogout} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireSuperuser user={user}>
+                <Dashboard />
+              </RequireSuperuser>
+            }
+          />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/inventario/productos" element={<Productos />} />
           <Route path="/inventario/categorias" element={<Categorias />} />
           <Route path="/ventas" element={<Ventas />} />
+
+          <Route
+            path="/reportes"
+            element={
+              <RequireSuperuser user={user}>
+                <Reportes />
+              </RequireSuperuser>
+            }
+          />
+          <Route
+            path="/reportes/ventas"
+            element={
+              <RequireSuperuser user={user}>
+                <ReportesVentas />
+              </RequireSuperuser>
+            }
+          />
+          <Route
+            path="/reportes/inventario"
+            element={
+              <RequireSuperuser user={user}>
+                <ReportesInventario />
+              </RequireSuperuser>
+            }
+          />
+          <Route
+            path="/reportes/financiero"
+            element={
+              <RequireSuperuser user={user}>
+                <ReportesFinanciero />
+              </RequireSuperuser>
+            }
+          />
+          <Route path="/cotizaciones" element={<Cotizaciones />} />
+          <Route
+            path="/usuarios"
+            element={
+              <RequireSuperuser user={user}>
+                <Usuarios />
+              </RequireSuperuser>
+            }
+          />
+          <Route path="*" element={<Navigate to="/inventario" replace />} />
+
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/reportes/ventas" element={<ReportesVentas />} />
         <Route path="/reportes/inventario" element={<ReportesInventario />} />
