@@ -4,7 +4,7 @@ function ProductDetailModal({ open, onClose, product }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-[32rem] flex flex-col overflow-hidden">
+      <div className="bg-white rounded-xl shadow-2xl w-[60%] h-[50%] flex flex-col overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">
             {product.name}
