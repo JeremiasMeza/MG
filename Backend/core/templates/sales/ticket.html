@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <style>
-    @page { size: 80mm auto; margin: 4mm; }
+    /* xhtml2pdf no soporta la altura "auto" en la directiva @page, por lo que se
+       define una altura fija para evitar errores de parseo */
+    @page { size: 80mm 200mm; margin: 4mm; }
     body { font-family: Arial, sans-serif; font-size: 10px; color: #000; }
     .logo { text-align: center; margin-bottom: 5px; }
     .logo img { max-width: 60mm; }
