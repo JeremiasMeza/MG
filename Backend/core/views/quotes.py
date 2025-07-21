@@ -22,11 +22,18 @@ class QuoteViewSet(viewsets.ModelViewSet):
         template = get_template('quotes/pdf.html')
         logo_path = os.path.join(settings.BASE_DIR, 'static', 'logo.png')
         details_count = quote.details.count()
-        blank_rows = (10 - details_count % 10) % 10
+
+        # Determine how many rows should be displayed on the first page.
+        # If the quote fits on a single page, use 7 rows so the totals and the
+        # footer have enough space. Otherwise fall back to 10 rows per page.
+        rows_per_page = 7 if details_count <= 7 else 10
+        blank_rows = (rows_per_page - details_count % rows_per_page) % rows_per_page
+
         context = {
             'quote': quote,
             'logo_path': logo_path,
             'blank_rows': blank_rows,
+            'rows_per_page': rows_per_page,
         }
         html = template.render(context)
 

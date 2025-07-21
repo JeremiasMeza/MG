@@ -255,6 +255,7 @@
   </div>
 
   <!-- ===== TABLA DE PRODUCTOS ===== -->
+  {% for group in quote.details.all|chunks:rows_per_page %}
   <table>
     <thead>
       <tr>
@@ -265,7 +266,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for detail in quote.details.all %}
+      {% for detail in group %}
       <tr>
         <td style="width: 45%;">{{ detail.product.name }}</td>
         <td style="width: 15%;" class="text-center">{{ detail.quantity }}</td>
@@ -273,7 +274,8 @@
         <td style="width: 20%;" class="text-right">${{ detail.subtotal|floatformat:0 }}</td>
       </tr>
       {% endfor %}
-      {% for _ in blank_rows|times %}
+      {% blank_rows group rows_per_page as blanks %}
+      {% for _ in blanks %}
       <tr>
         <td style="width: 45%;">&nbsp;</td>
         <td style="width: 15%;" class="text-center">&nbsp;</td>
@@ -283,6 +285,10 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if not forloop.last %}
+  <div style="page-break-after: always;"></div>
+  {% endif %}
+  {% endfor %}
 
   <!-- ===== SECCIÓN DE TOTALES ===== -->
   <div class="totals-section">
