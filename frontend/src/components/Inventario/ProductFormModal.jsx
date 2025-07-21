@@ -65,12 +65,24 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-semibold mb-4">
-          {product ? 'Editar Producto' : 'Nuevo Producto'}
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-3">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex justify-between items-center">
+          <h2 className="text-xl font-semibold">
+            {product ? 'Editar Producto' : 'Nuevo Producto'}
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="bg-white/10 hover:bg-white/20 text-white rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200 flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Cerrar
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-3 p-6 overflow-y-auto">
           <div>
             <label className="block text-sm font-medium text-gray-700">Nombre</label>
             <input
