@@ -238,17 +238,19 @@
   </div>
   
   <!-- ===== TÍTULO DE LA COTIZACIÓN ===== -->
-  <h1>Cotización #28</h1>
-  
+  <h1>Cotización #{{ quote.id }}</h1>
+
   <!-- ===== FECHA DE EMISIÓN ===== -->
   <div class="date-info">
-    <strong>Fecha de emisión:</strong> 20/07/2025
+    <strong>Fecha de emisión:</strong> {{ quote.created_at|date:"d/m/Y" }}
   </div>
-  
+
   <!-- ===== INFORMACIÓN DEL CLIENTE ===== -->
   <div class="client-info">
-    <p><strong>Cliente:</strong> Jere RUT: 123456789</p>
-    <p><strong>Email:</strong> yola1885@gmail.com</p>
+    <p><strong>Cliente:</strong> {{ quote.client_name }} RUT: {{ quote.client_rut }}</p>
+    {% if quote.client_email %}
+    <p><strong>Email:</strong> {{ quote.client_email }}</p>
+    {% endif %}
   </div>
 
   <!-- ===== TABLA DE PRODUCTOS ===== -->
@@ -262,12 +264,14 @@
       </tr>
     </thead>
     <tbody>
+      {% for detail in quote.details.all %}
       <tr>
-        <td>CAJA CHUQUICAMATA MEC</td>
-        <td class="text-center">1</td>
-        <td class="text-right">$1200.00</td>
-        <td class="text-right">$1200.00</td>
+        <td>{{ detail.product.name }}</td>
+        <td class="text-center">{{ detail.quantity }}</td>
+        <td class="text-right">${{ detail.price_unit|floatformat:0 }}</td>
+        <td class="text-right">${{ detail.subtotal|floatformat:0 }}</td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 
@@ -276,15 +280,15 @@
     <table class="totals-table">
       <tr>
         <td class="label">Subtotal:</td>
-        <td class="value">$1200.00</td>
+        <td class="value">${{ quote.subtotal|floatformat:0 }}</td>
       </tr>
       <tr>
         <td class="label">IVA:</td>
-        <td class="value">$228.00</td>
+        <td class="value">${{ quote.iva|floatformat:0 }}</td>
       </tr>
       <tr class="total-row">
         <td class="label">TOTAL:</td>
-        <td class="value">$1428.00</td>
+        <td class="value">${{ quote.total|floatformat:0 }}</td>
       </tr>
     </table>
   </div>
