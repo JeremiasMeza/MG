@@ -52,6 +52,10 @@ function Inventario() {
     .slice(0, 5)
     .map(([id, qty]) => ({ id: parseInt(id), qty, name: productMap[id]?.name }))
 
+  const lowStockProducts = products.filter(
+    (p) => p.stock < p.stock_minimum
+  )
+
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       <div className="flex items-center justify-between">
@@ -116,6 +120,24 @@ function Inventario() {
             </div>
           ) : (
             <p className="text-sm text-gray-500">No hay ventas registradas</p>
+          )}
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-4">
+          <h3 className="text-lg font-semibold mb-3">Productos con stock bajo</h3>
+          {lowStockProducts.length > 0 ? (
+            <ul className="space-y-2">
+              {lowStockProducts.map((p) => (
+                <li key={p.id} className="flex justify-between text-sm">
+                  <span>{p.name}</span>
+                  <span className="font-medium">
+                    {p.stock}/{p.stock_minimum}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500">No hay productos con stock bajo</p>
           )}
         </div>
       </div>
