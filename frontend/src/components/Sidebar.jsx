@@ -29,9 +29,9 @@ function Sidebar({ user, onLogout }) {
     return link.submenus.some(submenu => location.pathname === submenu.to)
   }
 
-  const baseLinks = [
-    { 
-      to: '/dashboard', 
+  const allLinks = [
+    {
+      to: '/dashboard',
       label: 'Dashboard',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,9 +126,10 @@ function Sidebar({ user, onLogout }) {
       )
     },
   ]
+  const regularLinks = allLinks.filter((l) => ['inventario', 'ventas', 'cotizaciones'].some(p => l.to.startsWith('/' + p)))
 
-  const links = [...baseLinks]
-  if (user?.role === 'admin') {
+  const links = user?.is_superuser ? [...allLinks] : [...regularLinks]
+  if (user?.is_superuser) {
     links.push({
       to: '/usuarios',
       label: 'Usuarios',
@@ -259,7 +260,7 @@ function Sidebar({ user, onLogout }) {
               {user?.username || 'Usuario'}
             </p>
             <p className="text-xs text-slate-400">
-              {user?.role === 'admin' ? 'Administrador' : 'Recepcionista'}
+              {user?.is_superuser ? 'Super Administrador' : 'Recepcionista'}
             </p>
           </div>
         </div>
