@@ -3,6 +3,7 @@ import ProductCard from '@components/Ventas/ProductCard.jsx'
 import ProductRow from '@components/Ventas/ProductRow.jsx'
 import Pagination from '@components/Ventas/Pagination.jsx'
 import QuoteSummary from '@components/Cotizaciones/QuoteSummary.jsx'
+import ProductDetailModal from '@components/ProductDetailModal.jsx'
 
 const PER_PAGE_GRID = 12
 const PER_PAGE_LIST = 15
@@ -16,6 +17,7 @@ function Cotizaciones() {
   const [cart, setCart] = useState([])
   const [page, setPage] = useState(1)
   const [viewMode, setViewMode] = useState('grid')
+  const [detailProduct, setDetailProduct] = useState(null)
   const [quoteInfo, setQuoteInfo] = useState({
     client_name: '',
     client_rut: '',
@@ -270,6 +272,7 @@ function Cotizaciones() {
                             quantity={qtyMap[p.id] || 1}
                             onQuantityChange={(val) => handleQtyChange(p.id, val)}
                             onAdd={() => handleAdd(p)}
+                            onShowDetails={() => setDetailProduct(p)}
                           />
                         ))}
                       </div>
@@ -284,6 +287,7 @@ function Cotizaciones() {
                             quantity={qtyMap[p.id] || 1}
                             onQuantityChange={(val) => handleQtyChange(p.id, val)}
                             onAdd={() => handleAdd(p)}
+                            onShowDetails={() => setDetailProduct(p)}
                           />
                         ))}
                       </div>
@@ -455,6 +459,13 @@ function Cotizaciones() {
           </div>
         </div>
       )}
+
+      {/* Modal de detalles */}
+      <ProductDetailModal
+        open={!!detailProduct}
+        product={detailProduct}
+        onClose={() => setDetailProduct(null)}
+      />
     </div>
   )
 }
