@@ -139,6 +139,15 @@ function Sidebar({ user, onLogout }) {
         </svg>
       )
     })
+    links.push({
+      to: '/import-export',
+      label: 'Importar/Exportar',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v8m4-4H8" />
+        </svg>
+      )
+    })
   }
 
   const toggleSubmenu = (index, e) => {
