@@ -21,7 +21,14 @@ class QuoteViewSet(viewsets.ModelViewSet):
         quote = self.get_object()
         template = get_template('quotes/pdf.html')
         logo_path = os.path.join(settings.BASE_DIR, 'static', 'logo.png')
-        html = template.render({'quote': quote, 'logo_path': logo_path})
+        details_count = quote.details.count()
+        blank_rows = (10 - details_count % 10) % 10
+        context = {
+            'quote': quote,
+            'logo_path': logo_path,
+            'blank_rows': blank_rows,
+        }
+        html = template.render(context)
 
         folder_path = os.path.join(settings.MEDIA_ROOT, 'quotes')
         os.makedirs(folder_path, exist_ok=True)
