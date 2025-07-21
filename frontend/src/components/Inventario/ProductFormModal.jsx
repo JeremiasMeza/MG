@@ -5,6 +5,8 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
   const [form, setForm] = useState({
     name: '',
     price: 0,
+    cost: 0,
+    barcode: '',
     stock: 0,
     stock_minimum: 0,
     category: '',
@@ -16,6 +18,8 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
       setForm({
         name: product.name || '',
         price: product.price || 0,
+        cost: product.cost || 0,
+        barcode: product.barcode || '',
         stock: product.stock || 0,
         stock_minimum: product.stock_minimum || 0,
         category: product.category || '',
@@ -25,6 +29,8 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
       setForm({
         name: '',
         price: 0,
+        cost: 0,
+        barcode: '',
         stock: 0,
         stock_minimum: 0,
         category: '',
@@ -47,6 +53,8 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
     const data = new FormData()
     data.append('name', form.name)
     data.append('price', form.price)
+    data.append('cost', form.cost)
+    data.append('barcode', form.barcode)
     data.append('stock', form.stock)
     data.append('stock_minimum', form.stock_minimum)
     data.append('category', form.category)
@@ -83,6 +91,26 @@ function ProductFormModal({ open, onClose, onSave, product, categories }) {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-3 py-2"
               required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Costo</label>
+            <input
+              type="number"
+              name="cost"
+              value={form.cost}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Código de barras</label>
+            <input
+              type="text"
+              name="barcode"
+              value={form.barcode}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
