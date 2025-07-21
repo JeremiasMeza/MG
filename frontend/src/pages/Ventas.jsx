@@ -5,6 +5,7 @@ import ProductRow from '@components/ventas/ProductRow.jsx'
 import CartSummary from '@components/ventas/CartSummary.jsx'
 import Pagination from '@components/ventas/Pagination.jsx'
 import ProductDetailModal from '@components/ProductDetailModal.jsx'
+import ReceiptModal from '@components/ventas/ReceiptModal.jsx'
 
 const PER_PAGE_GRID = 12
 const PER_PAGE_LIST = 15
@@ -27,6 +28,8 @@ function Ventas() {
     client_email: '',
     payment_method: '',
   })
+  const [showReceipt, setShowReceipt] = useState(false)
+  const [receiptUrl, setReceiptUrl] = useState('')
 
   useEffect(() => {
     const token = localStorage.getItem('access')
@@ -105,9 +108,16 @@ function Ventas() {
         body: JSON.stringify(payload),
       })
       if (!resp.ok) throw new Error('Error al registrar venta')
-      alert('Venta registrada')
+      const data = await resp.json()
       setCart([])
       setQtyMap({})
+      const pdfResp = await fetch(`http://192.168.1.52:8000/api/sales/${data.id}/export/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!pdfResp.ok) throw new Error('Error al generar boleta')
+      const pdfData = await pdfResp.json()
+      setReceiptUrl(pdfData.pdf_url)
+      setShowReceipt(true)
     } catch (err) {
       alert(err.message)
     }
@@ -304,6 +314,11 @@ function Ventas() {
         open={!!detailProduct}
         product={detailProduct}
         onClose={() => setDetailProduct(null)}
+      />
+      <ReceiptModal
+        open={showReceipt}
+        pdfUrl={receiptUrl}
+        onClose={() => setShowReceipt(false)}
       />
     </div>
   )

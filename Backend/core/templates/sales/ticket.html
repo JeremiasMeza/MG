@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    @page { size: 80mm auto; margin: 4mm; }
+    body { font-family: Arial, sans-serif; font-size: 10px; color: #000; }
+    .logo { text-align: center; margin-bottom: 5px; }
+    .logo img { max-width: 60mm; }
+    h1 { text-align:center; font-size: 14px; margin: 4px 0; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding: 2px 0; }
+    th { border-bottom: 1px dashed #000; font-weight: bold; }
+    tfoot td { border-top: 1px dashed #000; font-weight: bold; }
+    .text-right { text-align:right; }
+    .contact { text-align:center; margin-top:10px; font-size:9px; }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="{{ logo_path }}" alt="Logo">
+  </div>
+  <h1>Boleta #{{ sale.id }}</h1>
+  <p><strong>Cliente:</strong> {{ sale.client_first_name }} {{ sale.client_last_name }} ({{ sale.client_rut }})</p>
+  <p><strong>Fecha:</strong> {{ sale.sale_date|date:"d/m/Y H:i" }}</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th class="text-right">Cant</th>
+        <th class="text-right">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detail in sale.details.all %}
+      <tr>
+        <td>{{ detail.product.name }}</td>
+        <td class="text-right">{{ detail.quantity }}</td>
+        <td class="text-right">${{ detail.subtotal|floatformat:0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">Subtotal</td>
+        <td class="text-right">${{ sale.total|floatformat:0 }}</td>
+      </tr>
+      <tr>
+        <td colspan="2">IVA</td>
+        <td class="text-right">${{ sale.iva|floatformat:0 }}</td>
+      </tr>
+      <tr>
+        <td colspan="2">TOTAL</td>
+        <td class="text-right">${{ sale.total|add:sale.iva|floatformat:0 }}</td>
+      </tr>
+    </tfoot>
+  </table>
+  <div class="contact">
+    Dirección: Arturo Prat 15 Pahuil, Maule<br>
+    Teléfono: +56 9 82279511<br>
+    Email: contacto@muebleriageorge.cl
+  </div>
+</body>
+</html>
