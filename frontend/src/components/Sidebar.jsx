@@ -29,7 +29,7 @@ function Sidebar({ user, onLogout }) {
     return link.submenus.some(submenu => location.pathname === submenu.to)
   }
 
-  const links = [
+  const baseLinks = [
     { 
       to: '/dashboard', 
       label: 'Dashboard',
@@ -126,6 +126,19 @@ function Sidebar({ user, onLogout }) {
       )
     },
   ]
+
+  const links = [...baseLinks]
+  if (user?.role === 'admin') {
+    links.push({
+      to: '/usuarios',
+      label: 'Usuarios',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+      )
+    })
+  }
 
   const toggleSubmenu = (index, e) => {
     // Solo prevenir navegación si se hace click en la flecha
@@ -245,7 +258,9 @@ function Sidebar({ user, onLogout }) {
             <p className="text-sm font-medium text-slate-200 truncate">
               {user?.username || 'Usuario'}
             </p>
-            <p className="text-xs text-slate-400">Administrador</p>
+            <p className="text-xs text-slate-400">
+              {user?.role === 'admin' ? 'Administrador' : 'Recepcionista'}
+            </p>
           </div>
         </div>
         

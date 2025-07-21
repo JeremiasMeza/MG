@@ -12,6 +12,7 @@ import ReportesVentas from './pages/ReportesVentas.jsx'
 import ReportesInventario from './pages/ReportesInventario.jsx'
 import ReportesFinanciero from './pages/ReportesFinanciero.jsx'
 import Cotizaciones from './pages/Cotizaciones.jsx'
+import Usuarios from './pages/Usuarios.jsx'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -104,10 +105,11 @@ function App() {
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/reportes/ventas" element={<ReportesVentas />} />
-          <Route path="/reportes/inventario" element={<ReportesInventario />} />
-          <Route path="/reportes/financiero" element={<ReportesFinanciero />} />
-          <Route path="/cotizaciones" element={<Cotizaciones />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/reportes/inventario" element={<ReportesInventario />} />
+        <Route path="/reportes/financiero" element={<ReportesFinanciero />} />
+        <Route path="/cotizaciones" element={<Cotizaciones />} />
+        <Route path="/usuarios" element={<Usuarios />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>
