@@ -16,6 +16,7 @@ function ReportesFinanciero() {
 
   const loadData = async () => {
     setLoading(true)
+
     try {
       const [sales, products, categories] = await Promise.all([
         fetchAll('sales/'),
@@ -28,6 +29,34 @@ function ReportesFinanciero() {
       const filtered = sales.filter((s) => {
         const d = new Date(s.sale_date)
         return d >= start && d <= end
+
+    const [sales, products, categories] = await Promise.all([
+      fetchAll('sales/'),
+      fetchAll('products/'),
+      fetchAll('categories/')
+    ])
+    const start = new Date(startDate)
+    const end = new Date(endDate + 'T23:59:59')
+    const filtered = sales.filter((s) => {
+      const d = new Date(s.sale_date)
+      return d >= start && d <= end
+    })
+    let ingresos = 0
+    let costos = 0
+    const catMap = {}
+    filtered.forEach((s) => {
+      let saleCost = 0
+      s.details.forEach((d) => {
+        const p = products.find((pr) => pr.id === d.product_id)
+        if (!p) return
+        const sub = parseFloat(d.subtotal) || 0
+        const cost = parseFloat(p.cost || 0)
+        ingresos += sub
+        saleCost += cost * d.quantity
+        const cat = p.category
+        if (!catMap[cat]) catMap[cat] = { ingresos: 0, costos: 0 }
+        catMap[cat].ingresos += sub
+        catMap[cat].costos += cost * d.quantity
       })
       
       let ingresos = 0
