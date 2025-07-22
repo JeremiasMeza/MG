@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import SummaryCard from '@components/SummaryCard.jsx'
 import DataTable from '@components/DataTable.jsx'
 import { fetchAll } from '../api.js'
 
 function ReportesFinanciero() {
   const today = new Date().toISOString().slice(0, 10)
-  const first = today.slice(0, 8) + '01'
+  const first = `${today.slice(0, 8)}01`
+
   const [startDate, setStartDate] = useState(first)
   const [endDate, setEndDate] = useState(today)
   const [summary, setSummary] = useState(null)
-  const [byCat, setByCat] = useState([])
+  const [byCategory, setByCategory] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true)
     const [sales, products, categories] = await Promise.all([
       fetchAll('sales/'),
@@ -51,15 +52,15 @@ function ReportesFinanciero() {
       utilidad: val.ingresos - val.costos
     }))
     setSummary({ ingresos, costos, utilidad })
-    setByCat(catArray)
+    setByCategory(catArray)
     setLoading(false)
-  }
+  }, [startDate, endDate])
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [loadData])
 
-  const maxVal = Math.max(...byCat.map((c) => c.ingresos), 1)
+  const maxVal = Math.max(...byCategory.map((c) => c.ingresos), 1)
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -121,7 +122,7 @@ function ReportesFinanciero() {
           <div className="bg-white p-4 rounded-lg shadow">
             <h3 className="font-semibold mb-2">Ingresos por categoría</h3>
             <div className="flex items-end h-48 gap-3">
-              {byCat.map((c) => (
+              {byCategory.map((c) => (
                 <div key={c.categoria} className="flex-1 flex flex-col items-center">
                   <div className="w-4 bg-blue-500" style={{ height: `${(c.ingresos / maxVal) * 100}%` }}></div>
                   <span className="text-xs mt-1">{c.categoria}</span>
@@ -135,7 +136,7 @@ function ReportesFinanciero() {
             <div className="max-h-[60vh] overflow-y-auto">
               <DataTable
                 headers={["Categoría", "Ingresos", "Utilidad"]}
-                rows={byCat.map((c) => [
+                rows={byCategory.map((c) => [
                   c.categoria,
                   c.ingresos.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
                   c.utilidad.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
