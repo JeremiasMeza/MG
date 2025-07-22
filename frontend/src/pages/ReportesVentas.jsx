@@ -126,19 +126,21 @@ function ReportesVentas() {
         </button>
       </div>
 
-      <DataTable
-        headers={["Fecha", "ID", "Cliente", "Total", "Vendedor"]}
-        rows={filtered.map((s) => [
-          new Date(s.sale_date).toLocaleDateString(),
-          s.id,
-          `${s.client_first_name} ${s.client_last_name}`,
-          parseFloat(s.total).toLocaleString('es-CL', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          }),
-          users.find((u) => u.id === s.agent)?.username || s.agent
-        ])}
-      />
+      <div className="max-h-[60vh] overflow-y-auto">
+        <DataTable
+          headers={["Fecha", "ID", "Cliente", "Total", "Vendedor"]}
+          rows={filtered.map((s) => [
+            new Date(s.sale_date).toLocaleDateString(),
+            s.id,
+            `${s.client_first_name} ${s.client_last_name}`,
+            parseFloat(s.total).toLocaleString('es-CL', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }),
+            users.find((u) => u.id === s.agent)?.username || s.agent
+          ])}
+        />
+      </div>
 
       <div className="bg-white p-4 rounded-lg shadow">
         <h3 className="font-semibold mb-2">Ventas por día</h3>
@@ -154,7 +156,12 @@ function ReportesVentas() {
 
       <div className="bg-white p-4 rounded-lg shadow">
         <h3 className="font-semibold mb-2">Top 10 productos</h3>
-        <DataTable headers={["Producto", "Cantidad"]} rows={topProducts.map((t) => [t.name, t.qty])} />
+        <div className="max-h-[60vh] overflow-y-auto">
+          <DataTable
+            headers={["Producto", "Cantidad"]}
+            rows={topProducts.map((t) => [t.name, t.qty])}
+          />
+        </div>
       </div>
 
       {loading && <p className="text-sm">Cargando...</p>}
