@@ -39,12 +39,7 @@ function ReceiptModal({ open, onClose, pdfUrl }) {
             >
               Descargar Boleta
             </a>
-            <button
-              onClick={handlePrint}
-              className="bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
-            >
-              Imprimir
-            </button>
+            
           </div>
         </div>
       </div>
