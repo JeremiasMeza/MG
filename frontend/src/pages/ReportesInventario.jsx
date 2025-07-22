@@ -101,27 +101,29 @@ function ReportesInventario() {
         </button>
       </div>
 
-      <DataTable
-        headers={[
-          'Nombre',
-          'Categoría',
-          'Stock',
-          'Stock mínimo',
-          'Última venta'
-        ]}
-        rows={filtered.map((p) => [
-          p.name,
-          categories.find((c) => c.id === p.category)?.name || '-',
-          p.stock,
-          p.stock_minimum,
-          saleMap[p.id] ? saleMap[p.id].toLocaleDateString() : '-'
-        ])}
-      />
+      <div className="max-h-[60vh] overflow-y-auto">
+        <DataTable
+          headers={[
+            'Nombre',
+            'Categoría',
+            'Stock',
+            'Stock mínimo',
+            'Última venta'
+          ]}
+          rows={filtered.map((p) => [
+            p.name,
+            categories.find((c) => c.id === p.category)?.name || '-',
+            p.stock,
+            p.stock_minimum,
+            saleMap[p.id] ? saleMap[p.id].toLocaleDateString() : '-'
+          ])}
+        />
+      </div>
 
       <div className="bg-white rounded-lg shadow p-4">
         <h3 className="font-semibold mb-2">Productos con menor movimiento</h3>
         {lowMovement.length > 0 ? (
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1 text-sm max-h-60 overflow-y-auto">
             {lowMovement.map((p) => (
               <li key={p.id} className="flex justify-between">
                 <span>{p.name}</span>

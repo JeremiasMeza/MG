@@ -143,15 +143,17 @@ function Reportes() {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="font-semibold mb-2">Top 5 productos</h3>
-              <DataTable
-                headers={["Producto", "Cantidad"]}
-                rows={topProducts.map((p) => [p.name, p.qty])}
-              />
+              <div className="max-h-[60vh] overflow-y-auto">
+                <DataTable
+                  headers={["Producto", "Cantidad"]}
+                  rows={topProducts.map((p) => [p.name, p.qty])}
+                />
+              </div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="font-semibold mb-2">Productos con stock crítico</h3>
               {summary.lowStock.length > 0 ? (
-                <ul className="space-y-1 text-sm">
+                <ul className="space-y-1 text-sm max-h-60 overflow-y-auto">
                   {summary.lowStock.map((p) => (
                     <li key={p.id} className="flex justify-between">
                       <span>{p.name}</span>

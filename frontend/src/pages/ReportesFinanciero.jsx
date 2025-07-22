@@ -130,14 +130,16 @@ function ReportesFinanciero() {
 
           <div className="bg-white p-4 rounded-lg shadow">
             <h3 className="font-semibold mb-2">Detalle por categoría</h3>
-            <DataTable
-              headers={["Categoría", "Ingresos", "Utilidad"]}
-              rows={byCat.map((c) => [
-                c.categoria,
-                c.ingresos.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
-                c.utilidad.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-              ])}
-            />
+            <div className="max-h-[60vh] overflow-y-auto">
+              <DataTable
+                headers={["Categoría", "Ingresos", "Utilidad"]}
+                rows={byCat.map((c) => [
+                  c.categoria,
+                  c.ingresos.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
+                  c.utilidad.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+                ])}
+              />
+            </div>
           </div>
         </div>
       )}
