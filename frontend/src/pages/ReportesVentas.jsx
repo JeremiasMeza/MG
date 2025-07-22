@@ -10,7 +10,6 @@ function ReportesVentas() {
   const [sales, setSales] = useState([])
   const [products, setProducts] = useState([])
   const [users, setUsers] = useState([])
-  const [userFilter, setUserFilter] = useState('')
   const [prodFilter, setProdFilter] = useState('')
   const [topProducts, setTopProducts] = useState([])
   const [loading, setLoading] = useState(false)
@@ -55,17 +54,9 @@ function ReportesVentas() {
     return (
       d >= start &&
       d <= end &&
-      (userFilter === '' || s.agent === parseInt(userFilter)) &&
       (prodFilter === '' || s.details.some((dt) => dt.product_id === parseInt(prodFilter)))
     )
   })
-
-  const daily = {}
-  filtered.forEach((s) => {
-    const day = s.sale_date.slice(0, 10)
-    daily[day] = (daily[day] || 0) + parseFloat(s.total)
-  })
-  const maxVal = Math.max(...Object.values(daily), 1)
 
   const productMap = Object.fromEntries(products.map((p) => [p.id, p]))
 
@@ -110,21 +101,6 @@ function ReportesVentas() {
           />
         </div>
         <div>
-          <label className="text-sm text-gray-700">Vendedor</label>
-          <select
-            value={userFilter}
-            onChange={(e) => setUserFilter(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md"
-          >
-            <option value="">Todos</option>
-            {users.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.username}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
           <label className="text-sm text-gray-700">Producto</label>
           <select
             value={prodFilter}
@@ -147,46 +123,63 @@ function ReportesVentas() {
         </button>
       </div>
 
-      <div className="max-h-[60vh] overflow-y-auto">
-        <DataTable
-          headers={["Fecha", "ID", "Cliente", "Total", "Vendedor"]}
-          rows={filtered.map((s) => [
-            new Date(s.sale_date).toLocaleDateString(),
-            s.id,
-            `${s.client_first_name} ${s.client_last_name}`,
-            parseFloat(s.total).toLocaleString('es-CL', {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            }),
-            users.find((u) => u.id === s.agent)?.username || s.agent
-          ])}
-          onRowClick={(row, i) => openSale(filtered[i])}
-        />
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="font-semibold mb-2">Ventas por día</h3>
-        <div className="flex items-end h-48 gap-3">
-          {Object.entries(daily).map(([day, val]) => (
-            <div key={day} className="flex-1 flex flex-col items-center">
-              <div className="w-4 bg-blue-500" style={{ height: `${(val / maxVal) * 100}%` }}></div>
-              <span className="text-xs mt-1">{day.split('-')[2]}</span>
+      {/* Two Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-16rem)] overflow-hidden">
+        
+        {/* Sales Report Column */}
+        <div className="bg-white p-4 rounded-lg shadow flex flex-col">
+          <h3 className="font-semibold mb-4 text-lg">Reporte de Ventas</h3>
+          <div className="flex-1 overflow-y-auto">
+            <DataTable
+              headers={["Fecha", "ID", "Cliente", "Total"]}
+              rows={filtered.map((s) => [
+                new Date(s.sale_date).toLocaleDateString(),
+                s.id,
+                `${s.client_first_name} ${s.client_last_name}`,
+                parseFloat(s.total).toLocaleString('es-CL', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
+                })
+              ])}
+              onRowClick={(row, i) => openSale(filtered[i])}
+            />
+          </div>
+          {filtered.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                Total de ventas: <span className="font-semibold">{filtered.length}</span>
+              </p>
+              <p className="text-sm text-gray-600">
+                Monto total: <span className="font-semibold">
+                  {filtered.reduce((sum, s) => sum + parseFloat(s.total), 0).toLocaleString('es-CL', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                  })}
+                </span>
+              </p>
             </div>
-          ))}
+          )}
+        </div>
+
+        {/* Top 10 Products Column */}
+        <div className="bg-white p-4 rounded-lg shadow flex flex-col">
+          <h3 className="font-semibold mb-4 text-lg">Top 10 Productos</h3>
+          <div className="flex-1 overflow-y-auto">
+            <DataTable
+              headers={["Producto", "Cantidad"]}
+              rows={topProducts.map((t) => [t.name, t.qty])}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="font-semibold mb-2">Top 10 productos</h3>
-        <div className="max-h-[60vh] overflow-y-auto">
-          <DataTable
-            headers={["Producto", "Cantidad"]}
-            rows={topProducts.map((t) => [t.name, t.qty])}
-          />
+      {loading && (
+        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-40">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <p className="text-sm">Cargando...</p>
+          </div>
         </div>
-      </div>
-
-      {loading && <p className="text-sm">Cargando...</p>}
+      )}
 
       {selectedSale && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -223,36 +216,36 @@ function ReportesVentas() {
                   maximumFractionDigits: 0
                 })}
               </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-800 mb-2">Detalles</h4>
-              <ul className="space-y-1 max-h-60 overflow-y-auto text-sm">
-                {selectedSale.details.map((d, i) => (
-                  <li key={i} className="flex justify-between items-start">
-                    <div>
-                      <p>{productMap[d.product_id]?.name || `Producto ${d.product_id}`}</p>
-                      {productMap[d.product_id]?.barcode && (
-                        <p className="text-xs text-gray-500">Cod: {productMap[d.product_id].barcode}</p>
-                      )}
-                    </div>
-                    <span className="text-gray-700">x{d.quantity}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {receiptUrl && (
-              <div className="pt-4 flex justify-end">
-                <a
-                  href={receiptUrl}
-                  download
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
-                >
-                  Descargar Boleta
-                </a>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-2">Detalles</h4>
+                <ul className="space-y-1 max-h-60 overflow-y-auto text-sm">
+                  {selectedSale.details.map((d, i) => (
+                    <li key={i} className="flex justify-between items-start">
+                      <div>
+                        <p>{productMap[d.product_id]?.name || `Producto ${d.product_id}`}</p>
+                        {productMap[d.product_id]?.barcode && (
+                          <p className="text-xs text-gray-500">Cod: {productMap[d.product_id].barcode}</p>
+                        )}
+                      </div>
+                      <span className="text-gray-700">x{d.quantity}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )}
+              {receiptUrl && (
+                <div className="pt-4 flex justify-end">
+                  <a
+                    href={receiptUrl}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
+                  >
+                    Descargar Boleta
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
