@@ -1,6 +1,6 @@
 import React from 'react'
 
-function DataTable({ headers, rows }) {
+function DataTable({ headers, rows, onRowClick }) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -18,7 +18,11 @@ function DataTable({ headers, rows }) {
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
           {rows.map((row, i) => (
-            <tr key={i} className="hover:bg-gray-50">
+            <tr
+              key={i}
+              className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+              onClick={onRowClick ? () => onRowClick(row, i) : undefined}
+            >
               {row.map((cell, j) => (
                 <td key={j} className="px-3 py-2 text-sm text-gray-700">
                   {cell}
