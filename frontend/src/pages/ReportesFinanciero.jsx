@@ -33,12 +33,14 @@ function ReportesFinanciero() {
       s.details.forEach((d) => {
         const p = products.find((pr) => pr.id === d.product_id)
         if (!p) return
-        ingresos += d.subtotal
-        saleCost += (p.cost || 0) * d.quantity
+        const sub = parseFloat(d.subtotal) || 0
+        const cost = parseFloat(p.cost || 0)
+        ingresos += sub
+        saleCost += cost * d.quantity
         const cat = p.category
         if (!catMap[cat]) catMap[cat] = { ingresos: 0, costos: 0 }
-        catMap[cat].ingresos += d.subtotal
-        catMap[cat].costos += (p.cost || 0) * d.quantity
+        catMap[cat].ingresos += sub
+        catMap[cat].costos += cost * d.quantity
       })
       costos += saleCost
     })
