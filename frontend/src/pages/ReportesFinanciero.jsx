@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import SummaryCard from '@components/SummaryCard.jsx'
-import DataTable from '@components/DataTable.jsx'
 import { fetchAll } from '../api.js'
 
 function ReportesFinanciero() {
@@ -9,13 +8,17 @@ function ReportesFinanciero() {
   const [startDate, setStartDate] = useState(first)
   const [endDate, setEndDate] = useState(today)
   const [summary, setSummary] = useState(null)
+<<<<<<< HEAD
   const [byCat, setByCat] = useState([])
   const [byProduct, setByProduct] = useState([])
+=======
+>>>>>>> 88627591f078b617598e6110e13a18292bc59c11
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('category')
 
   const loadData = async () => {
     setLoading(true)
+<<<<<<< HEAD
 
     try {
       const [sales, products, categories] = await Promise.all([
@@ -102,11 +105,42 @@ function ReportesFinanciero() {
       setLoading(false)
     }
   }
+=======
+    const [sales, products] = await Promise.all([
+      fetchAll('sales/'),
+      fetchAll('products/')
+    ])
+    const start = new Date(startDate)
+    const end = new Date(endDate + 'T23:59:59')
+    const filtered = sales.filter((s) => {
+      const d = new Date(s.sale_date)
+      return d >= start && d <= end
+    })
+    let ingresos = 0
+    let costos = 0
+    filtered.forEach((s) => {
+      let saleCost = 0
+      s.details.forEach((d) => {
+        const p = products.find((pr) => pr.id === d.product_id)
+        if (!p) return
+        const sub = parseFloat(d.subtotal) || 0
+        const cost = parseFloat(p.cost || 0)
+        ingresos += sub
+        saleCost += cost * d.quantity
+      })
+      costos += saleCost
+    })
+    const utilidad = ingresos - costos
+    setSummary({ ingresos, costos, utilidad })
+    setLoading(false)
+  }, [startDate, endDate])
+>>>>>>> 88627591f078b617598e6110e13a18292bc59c11
 
   useEffect(() => {
     loadData()
   }, [startDate, endDate])
 
+<<<<<<< HEAD
   const formatCurrency = (value) => {
     return value.toLocaleString('es-CL', {
       minimumFractionDigits: 0,
@@ -119,6 +153,8 @@ function ReportesFinanciero() {
   }
 
   const maxCatVal = Math.max(...byCat.map((c) => c.ingresos), 1)
+=======
+>>>>>>> 88627591f078b617598e6110e13a18292bc59c11
 
   return (
     <div className="h-screen p-6 space-y-6 bg-gray-50 overflow-hidden">
@@ -151,12 +187,15 @@ function ReportesFinanciero() {
         >
           {loading ? 'Consultando...' : 'Consultar'}
         </button>
+<<<<<<< HEAD
         <button
           onClick={() => window.print()}
           className="h-10 px-4 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
         >
           Exportar PDF
         </button>
+=======
+>>>>>>> 88627591f078b617598e6110e13a18292bc59c11
       </div>
 
       {summary && (
@@ -193,6 +232,7 @@ function ReportesFinanciero() {
             />
           </div>
 
+<<<<<<< HEAD
           {/* Vista de categorías y productos */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-24rem)] overflow-hidden">
             <div className="bg-white p-4 rounded-lg shadow flex flex-col">
@@ -278,6 +318,20 @@ function ReportesFinanciero() {
                 )}
               </div>
             </div>
+=======
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-semibold mb-2">Resumen Financiero</h3>
+            <p className="text-sm text-gray-500">
+              En este espacio se mostrarán gráficos financieros adaptados a tu negocio.
+            </p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-semibold mb-2">Detalle de ingresos</h3>
+            <p className="text-sm text-gray-500">
+              Aquí podrás revisar reportes personalizados según las necesidades de la mueblería.
+            </p>
+>>>>>>> 88627591f078b617598e6110e13a18292bc59c11
           </div>
         </div>
       )}
