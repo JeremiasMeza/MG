@@ -7,7 +7,6 @@ function ReportesInventario() {
   const [sales, setSales] = useState([])
   const [categories, setCategories] = useState([])
   const [catFilter, setCatFilter] = useState('')
-  const [brandFilter, setBrandFilter] = useState('')
   const [loading, setLoading] = useState(false)
 
   const loadData = async () => {
@@ -46,8 +45,7 @@ function ReportesInventario() {
   // Filtrar productos
   const filtered = products.filter(
     (p) =>
-      (catFilter === '' || p.category === parseInt(catFilter)) &&
-      (brandFilter === '' || (p.brand || '').toLowerCase().includes(brandFilter.toLowerCase()))
+      (catFilter === '' || p.category === parseInt(catFilter))
   )
 
   // Productos con stock bajo (stock < stock_minimum)
@@ -114,37 +112,7 @@ function ReportesInventario() {
               </select>
             </div>
             
-            <div className="w-1/4">
-              <label className="block text-xs font-medium text-gray-700 mb-1">Proveedor</label>
-              <input
-                type="text"
-                value={brandFilter}
-                onChange={(e) => setBrandFilter(e.target.value)}
-                placeholder="Filtrar por proveedor..."
-                className="w-full border border-gray-300 px-2 py-1.5 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              />
-            </div>
-            
-            <div className="flex gap-2 ml-auto">
-              <button
-                onClick={() => window.print()}
-                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors duration-200 flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                PDF
-              </button>
-              <button
-                onClick={() => window.print()}
-                className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors duration-200 flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Excel
-              </button>
-            </div>
+            <div className="flex-1"></div>
           </div>
         </div>
 
@@ -268,7 +236,7 @@ function ReportesInventario() {
                 <span className="ml-3 text-gray-600 font-medium">Cargando datos...</span>
               </div>
             ) : (
-              <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <div className="h-full overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                 <DataTable
                   headers={[
                     'Producto',
