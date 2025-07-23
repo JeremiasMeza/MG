@@ -11,7 +11,7 @@ function ReportesVentas() {
   const [products, setProducts] = useState([])
   const [users, setUsers] = useState([])
   const [prodFilter, setProdFilter] = useState('')
-  const [topProducts, setTopProducts] = useState([])
+
   const [loading, setLoading] = useState(false)
   const [selectedSale, setSelectedSale] = useState(null)
   const [receiptUrl, setReceiptUrl] = useState('')
@@ -27,33 +27,19 @@ function ReportesVentas() {
     setProducts(productsData)
     setUsers(usersData)
     setLoading(false)
-    const counts = {}
-    salesData.forEach((s) => {
-      s.details.forEach((d) => {
-        counts[d.product_id] = (counts[d.product_id] || 0) + d.quantity
-      })
-    })
-    const tops = Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([id, qty]) => ({
-        name: productsData.find((p) => p.id === parseInt(id))?.name || id,
-        qty
-      }))
-    setTopProducts(tops)
   }
 
   useEffect(() => {
     loadData()
   }, [])
 
-  const start = new Date(startDate)
-  const end = new Date(endDate + 'T23:59:59')
+  // Filtro corregido - comparando fechas como strings
   const filtered = sales.filter((s) => {
-    const d = new Date(s.sale_date)
+    // Convertir la fecha de venta a formato YYYY-MM-DD
+    const saleDate = new Date(s.sale_date).toISOString().slice(0, 10)
     return (
-      d >= start &&
-      d <= end &&
+      saleDate >= startDate &&
+      saleDate <= endDate &&
       (prodFilter === '' || s.details.some((dt) => dt.product_id === parseInt(prodFilter)))
     )
   })
@@ -115,19 +101,12 @@ function ReportesVentas() {
             ))}
           </select>
         </div>
-        <button onClick={() => window.print()} className="h-10 px-4 bg-blue-600 text-white rounded-md">
-          Exportar PDF
-        </button>
-        <button onClick={() => window.print()} className="h-10 px-4 bg-green-600 text-white rounded-md">
-          Exportar Excel
-        </button>
+
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-16rem)] overflow-hidden">
-        
-        {/* Sales Report Column */}
-        <div className="bg-white p-4 rounded-lg shadow flex flex-col">
+      {/* Sales Report - Full Width */}
+      <div className="h-[calc(100vh-16rem)] overflow-hidden">
+        <div className="bg-white p-4 rounded-lg shadow flex flex-col h-full">
           <h3 className="font-semibold mb-4 text-lg">Reporte de Ventas</h3>
           <div className="flex-1 overflow-y-auto">
             <DataTable
@@ -159,17 +138,6 @@ function ReportesVentas() {
               </p>
             </div>
           )}
-        </div>
-
-        {/* Top 10 Products Column */}
-        <div className="bg-white p-4 rounded-lg shadow flex flex-col">
-          <h3 className="font-semibold mb-4 text-lg">Top 10 Productos</h3>
-          <div className="flex-1 overflow-y-auto">
-            <DataTable
-              headers={["Producto", "Cantidad"]}
-              rows={topProducts.map((t) => [t.name, t.qty])}
-            />
-          </div>
         </div>
       </div>
 
