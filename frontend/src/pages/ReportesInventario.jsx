@@ -7,7 +7,6 @@ function ReportesInventario() {
   const [sales, setSales] = useState([])
   const [categories, setCategories] = useState([])
   const [catFilter, setCatFilter] = useState('')
-  const [brandFilter, setBrandFilter] = useState('')
   const [loading, setLoading] = useState(false)
   const [lowMovement, setLowMovement] = useState([])
 
@@ -53,9 +52,7 @@ function ReportesInventario() {
   })
 
   const filtered = products.filter(
-    (p) =>
-      (catFilter === '' || p.category === parseInt(catFilter)) &&
-      (brandFilter === '' || (p.brand || '').toLowerCase().includes(brandFilter.toLowerCase()))
+    (p) => catFilter === '' || p.category === parseInt(catFilter)
   )
 
   return (
@@ -78,30 +75,15 @@ function ReportesInventario() {
             ))}
           </select>
         </div>
-        <div>
-          <label className="text-sm text-gray-700">Proveedor</label>
-          <input
-            type="text"
-            value={brandFilter}
-            onChange={(e) => setBrandFilter(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md"
-          />
-        </div>
         <button
-          onClick={() => window.print()}
+          onClick={() => loadData()}
           className="h-10 px-4 bg-blue-600 text-white rounded-md"
         >
-          Exportar PDF
-        </button>
-        <button
-          onClick={() => window.print()}
-          className="h-10 px-4 bg-green-600 text-white rounded-md"
-        >
-          Exportar Excel
+          Aplicar filtros
         </button>
       </div>
 
-      <div className="max-h-[60vh] overflow-y-auto">
+      <div className="max-h-[60vh] overflow-y-scroll">
         <DataTable
           headers={[
             'Nombre',
