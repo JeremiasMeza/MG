@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_BASE } from '../api.js'
 
 function Login({ onSuccess }) {
   const [username, setUsername] = useState('')
@@ -12,7 +13,7 @@ function Login({ onSuccess }) {
     setIsLoading(true)
     
     try {
-      const resp = await fetch('http://192.168.1.52:8000/api/login/', {
+      const resp = await fetch(`${API_BASE}/login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

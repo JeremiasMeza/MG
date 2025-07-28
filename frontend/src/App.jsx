@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login.jsx'
+import { API_BASE } from './api.js'
 import Layout from './components/Layout.jsx'
 import Dashboard from './pages/Dashboard.jsx'
-import Inventario from './pages/Inventario.jsx'
-import Productos from './pages/Productos.jsx'
-import Ventas from './pages/Ventas.jsx'
-import Reportes from './pages/Reportes.jsx'
-import Categorias from './pages/Categorias.jsx'
-import ReportesVentas from './pages/ReportesVentas.jsx'
-import ReportesInventario from './pages/ReportesInventario.jsx'
-import ReportesFinanciero from './pages/ReportesFinanciero.jsx'
-import Cotizaciones from './pages/Cotizaciones.jsx'
-import Usuarios from './pages/Usuarios.jsx'
+import Inventory from './pages/Inventory.jsx'
+import Products from './pages/Products.jsx'
+import Sales from './pages/Sales.jsx'
+import Reports from './pages/Reports.jsx'
+import Categories from './pages/Categories.jsx'
+import SalesReports from './pages/SalesReports.jsx'
+import InventoryReports from './pages/InventoryReports.jsx'
+import FinancialReports from './pages/FinancialReports.jsx'
+import Quotes from './pages/Quotes.jsx'
+import Users from './pages/Users.jsx'
 import ImportExport from './pages/ImportExport.jsx'
 
 function RequireSuperuser({ children, user }) {
@@ -47,7 +48,7 @@ function App() {
     const refresh = localStorage.getItem('refresh')
     try {
       const resp = await fetch(
-        'http://192.168.1.52:8000/api/auth/token/refresh/',
+        `${API_BASE}/auth/token/refresh/`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -119,16 +120,16 @@ function App() {
               </RequireSuperuser>
             }
           />
-          <Route path="/inventario" element={<Inventario />} />
-          <Route path="/inventario/productos" element={<Productos />} />
-          <Route path="/inventario/categorias" element={<Categorias />} />
-          <Route path="/ventas" element={<Ventas />} />
+          <Route path="/inventario" element={<Inventory />} />
+          <Route path="/inventario/productos" element={<Products />} />
+          <Route path="/inventario/categorias" element={<Categories />} />
+          <Route path="/ventas" element={<Sales />} />
 
           <Route
             path="/reportes"
             element={
               <RequireSuperuser user={user}>
-                <Reportes />
+                <Reports />
               </RequireSuperuser>
             }
           />
@@ -136,7 +137,7 @@ function App() {
             path="/reportes/ventas"
             element={
               <RequireSuperuser user={user}>
-                <ReportesVentas />
+                <SalesReports />
               </RequireSuperuser>
             }
           />
@@ -144,7 +145,7 @@ function App() {
             path="/reportes/inventario"
             element={
               <RequireSuperuser user={user}>
-                <ReportesInventario />
+                <InventoryReports />
               </RequireSuperuser>
             }
           />
@@ -152,16 +153,16 @@ function App() {
             path="/reportes/financiero"
             element={
               <RequireSuperuser user={user}>
-                <ReportesFinanciero />
+                <FinancialReports />
               </RequireSuperuser>
             }
           />
-          <Route path="/cotizaciones" element={<Cotizaciones />} />
+            <Route path="/cotizaciones" element={<Quotes />} />
           <Route
             path="/usuarios"
             element={
               <RequireSuperuser user={user}>
-                <Usuarios />
+                  <Users />
               </RequireSuperuser>
             }
           />
@@ -174,14 +175,6 @@ function App() {
             }
           />
           <Route path="*" element={<Navigate to="/inventario" replace />} />
-
-          <Route path="/reportes" element={<Reportes />} />
-          <Route path="/reportes/ventas" element={<ReportesVentas />} />
-        <Route path="/reportes/inventario" element={<ReportesInventario />} />
-        <Route path="/reportes/financiero" element={<ReportesFinanciero />} />
-        <Route path="/cotizaciones" element={<Cotizaciones />} />
-        <Route path="/usuarios" element={<Usuarios />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>

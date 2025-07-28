@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { fetchAll, API_BASE, authHeaders } from '../api.js'
 
 function Inventario() {
   const [sales, setSales] = useState([])
@@ -7,29 +8,11 @@ function Inventario() {
   const [selectedSale, setSelectedSale] = useState(null)
   const [receiptUrl, setReceiptUrl] = useState('')
   const [salesSearch, setSalesSearch] = useState('')
-  const token = localStorage.getItem('access')
-  const authHeaders = { Authorization: `Bearer ${token}` }
-
-  const fetchAll = async (url) => {
-    const items = []
-    let next = url
-    while (next) {
-      const resp = await fetch(next, { headers: authHeaders })
-      const data = await resp.json()
-      if (Array.isArray(data)) {
-        items.push(...data)
-        break
-      }
-      items.push(...(data.results || []))
-      next = data.next
-    }
-    return items
-  }
 
   const fetchData = () => {
     Promise.all([
-      fetchAll('http://192.168.1.52:8000/api/sales/'),
-      fetchAll('http://192.168.1.52:8000/api/products/'),
+      fetchAll('sales/'),
+      fetchAll('products/'),
     ])
       .then(([salesData, productsData]) => {
         setSales(salesData)
@@ -72,9 +55,9 @@ function Inventario() {
     setSelectedSale(sale)
     setReceiptUrl('')
     try {
-      const resp = await fetch(
-        `http://192.168.1.52:8000/api/sales/${sale.id}/export/`,
-        { headers: authHeaders }
+        const resp = await fetch(
+          `${API_BASE}/sales/${sale.id}/export/`,
+          { headers: authHeaders() }
       )
       if (resp.ok) {
         const data = await resp.json()

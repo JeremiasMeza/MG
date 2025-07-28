@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import UserFormModal from '@components/Usuarios/UserFormModal.jsx'
+import { API_BASE, authHeaders } from '../api.js'
 
 // Componente UserRow mejorado siguiendo el mismo patrón
 function UserRow({ user, onEdit, onDelete }) {
@@ -105,12 +106,10 @@ function Usuarios() {
   const [users, setUsers] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
-  const token = localStorage.getItem('access')
-
-  const authHeaders = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+  const headers = { ...authHeaders(), 'Content-Type': 'application/json' }
 
   const fetchUsers = () => {
-    fetch('http://192.168.1.52:8000/api/users/', { headers: authHeaders })
+    fetch(`${API_BASE}/users/`, { headers })
       .then((r) => r.json())
       .then(setUsers)
       .catch((e) => console.error(e))
@@ -122,14 +121,14 @@ function Usuarios() {
 
   const handleSave = async (data) => {
     try {
-      const resp = await fetch(
-        editing ? `http://192.168.1.52:8000/api/users/${editing.id}/` : 'http://192.168.1.52:8000/api/users/',
-        {
-          method: editing ? 'PUT' : 'POST',
-          headers: authHeaders,
-          body: JSON.stringify(data),
-        }
-      )
+        const resp = await fetch(
+          editing ? `${API_BASE}/users/${editing.id}/` : `${API_BASE}/users/`,
+          {
+            method: editing ? 'PUT' : 'POST',
+            headers,
+            body: JSON.stringify(data),
+          }
+        )
       if (!resp.ok) throw new Error('Error al guardar')
       setModalOpen(false)
       setEditing(null)
@@ -142,10 +141,10 @@ function Usuarios() {
   const handleDelete = async (u) => {
     if (!window.confirm('¿Eliminar usuario?')) return
     try {
-      const resp = await fetch(`http://192.168.1.52:8000/api/users/${u.id}/`, {
-        method: 'DELETE',
-        headers: authHeaders,
-      })
+        const resp = await fetch(`${API_BASE}/users/${u.id}/`, {
+          method: 'DELETE',
+          headers,
+        })
       if (!resp.ok) throw new Error('Error al eliminar')
       fetchUsers()
     } catch (err) {

@@ -30,22 +30,22 @@ class SalesSummaryReportView(APIView):
 
         sales = Sale.objects.filter(**filters)
 
-        total_ventas = sales.aggregate(total=Sum('total'))['total'] or 0
-        total_iva = sales.aggregate(iva=Sum('iva'))['iva'] or 0
+        total_sales = sales.aggregate(total=Sum('total'))['total'] or 0
+        total_tax = sales.aggregate(iva=Sum('iva'))['iva'] or 0
 
-        detalles = SaleDetail.objects.filter(sale__in=sales)
+        details = SaleDetail.objects.filter(sale__in=sales)
 
-        total_costos = 0
-        for d in detalles:
+        total_cost = 0
+        for d in details:
             if d.product.cost:
-                total_costos += d.product.cost * d.quantity
+                total_cost += d.product.cost * d.quantity
 
-        ganancia = total_ventas - total_costos
-        margen = (ganancia / total_ventas * 100) if total_ventas else 0
+        net_profit = total_sales - total_cost
+        margin = (net_profit / total_sales * 100) if total_sales else 0
 
         # Producto más vendido
         best = (
-            detalles.values('product__name')
+            details.values('product__name')
             .annotate(total_qty=Sum('quantity'))
             .order_by('-total_qty')
             .first()
@@ -71,11 +71,11 @@ class SalesSummaryReportView(APIView):
         )
 
         return Response({
-            'total_ventas': round(total_ventas, 2),
-            'total_iva': round(total_iva, 2),
-            'total_costos': round(total_costos, 2),
-            'ganancia_neta': round(ganancia, 2),
-            'margen_porcentual': round(margen, 2),
+            'total_sales': round(total_sales, 2),
+            'total_tax': round(total_tax, 2),
+            'total_cost': round(total_cost, 2),
+            'net_profit': round(net_profit, 2),
+            'margin_percent': round(margin, 2),
             'best_selling_product': best_product,
             'low_stock_products': list(low_stock),
             'daily_sales': list(daily_sales),

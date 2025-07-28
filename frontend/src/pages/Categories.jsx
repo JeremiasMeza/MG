@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react'
 import CategoryRow from '@components/Categorias/CategoryRow.jsx'
 import CategoryFormModal from '@components/Categorias/CategoryFormModal.jsx'
+import { API_BASE, authHeaders } from '../api.js'
 
 function Categorias() {
   const [categories, setCategories] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
-  const token = localStorage.getItem('access')
-
-  const authHeaders = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+  const headers = { ...authHeaders(), 'Content-Type': 'application/json' }
 
   const fetchCategories = () => {
-    fetch('http://192.168.1.52:8000/api/categories/', { headers: authHeaders })
+    fetch(`${API_BASE}/categories/`, { headers })
       .then((r) => r.json())
       .then(setCategories)
       .catch((e) => console.error(e))
@@ -23,14 +22,14 @@ function Categorias() {
 
   const handleSave = async (data) => {
     try {
-      const resp = await fetch(
-        editing ? `http://192.168.1.52:8000/api/categories/${editing.id}/` : 'http://192.168.1.52:8000/api/categories/',
-        {
-          method: editing ? 'PUT' : 'POST',
-          headers: authHeaders,
-          body: JSON.stringify(data),
-        }
-      )
+        const resp = await fetch(
+          editing ? `${API_BASE}/categories/${editing.id}/` : `${API_BASE}/categories/`,
+          {
+            method: editing ? 'PUT' : 'POST',
+            headers,
+            body: JSON.stringify(data),
+          }
+        )
       if (!resp.ok) throw new Error('Error al guardar')
       setModalOpen(false)
       setEditing(null)
@@ -43,10 +42,10 @@ function Categorias() {
   const handleDelete = async (cat) => {
     if (!window.confirm('¿Eliminar categoría?')) return
     try {
-      const resp = await fetch(`http://192.168.1.52:8000/api/categories/${cat.id}/`, {
-        method: 'DELETE',
-        headers: authHeaders,
-      })
+        const resp = await fetch(`${API_BASE}/categories/${cat.id}/`, {
+          method: 'DELETE',
+          headers,
+        })
       if (!resp.ok) throw new Error('Error al eliminar')
       fetchCategories()
     } catch (err) {

@@ -1,4 +1,5 @@
-export const API_BASE = 'http://192.168.1.52:8000/api'
+export const API_BASE =
+  import.meta.env.VITE_API_BASE || 'http://localhost:8000/api'
 
 export function authHeaders() {
   const token = localStorage.getItem('access')
