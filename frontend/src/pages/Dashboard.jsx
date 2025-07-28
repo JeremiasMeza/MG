@@ -39,7 +39,8 @@ function Dashboard() {
     weekStart.setDate(weekStart.getDate() - diff)
     weekStart.setHours(0, 0, 0, 0)
     const weekEnd = new Date(weekStart)
-    weekEnd.setDate(weekStart.getDate() + 6)
+    weekEnd.setDate(weekStart.getDate() + 7)
+    weekEnd.setMilliseconds(-1)
 
     const salesWeek = sales.filter((s) => {
       const d = new Date(s.sale_date)
@@ -79,7 +80,14 @@ function Dashboard() {
         <div className="flex items-end h-48 gap-3">
           {Object.entries(weekly).map(([d, val]) => (
             <div key={d} className="flex-1 flex flex-col items-center">
-              <div className="w-4 bg-blue-500" style={{ height: `${(val / maxVal) * 100}%` }}></div>
+              <div
+                className="w-4 bg-blue-500 relative"
+                style={{ height: `${(val / maxVal) * 100}%` }}
+              >
+                <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-medium">
+                  {val.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </span>
+              </div>
               <span className="text-xs mt-1">{d}</span>
             </div>
           ))}
