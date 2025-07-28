@@ -1,4 +1,7 @@
-export const API_BASE = import.meta.env.VITE_API_BASE;
+// Default the API base URL to localhost if not provided via environment
+// variable. This prevents runtime errors when VITE_API_BASE is undefined.
+export const API_BASE =
+  import.meta.env.VITE_API_BASE || 'http://localhost:8000/api';
 
 export function authHeaders() {
   const token = localStorage.getItem('access');
