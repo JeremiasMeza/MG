@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import InventoryRow from '@components/Inventario/InventoryRow.jsx'
 import ProductFormModal from '@components/Inventario/ProductFormModal.jsx'
 import { API_BASE, authHeaders } from '../api.js'
+import { fetchAll } from '../api/productos';
 
 function Productos() {
   const [products, setProducts] = useState([])
