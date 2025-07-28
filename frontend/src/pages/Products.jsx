@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import InventoryRow from '@components/Inventario/InventoryRow.jsx'
 import ProductFormModal from '@components/Inventario/ProductFormModal.jsx'
+import { API_BASE, authHeaders } from '../api.js'
 
 function Productos() {
   const [products, setProducts] = useState([])
@@ -12,36 +13,12 @@ function Productos() {
   const [modalOpen, setModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const token = localStorage.getItem('access')
-  const authHeaders = { Authorization: `Bearer ${token}` }
-
-  const fetchAllProducts = async (url) => {
-    const items = []
-    let next = url
-    while (next) {
-      const resp = await fetch(next, { headers: authHeaders })
-      const data = await resp.json()
-      if (Array.isArray(data)) {
-        items.push(...data)
-        break
-      }
-      if (data.results) {
-        items.push(...data.results)
-        next = data.next
-      } else {
-        items.push(...data)
-        next = null
-      }
-    }
-    return items
-  }
-
   const fetchData = () => {
     setLoading(true)
     Promise.all([
-      fetchAllProducts('http://192.168.1.52:8000/api/products/'),
-      fetch('http://192.168.1.52:8000/api/categories/', {
-        headers: authHeaders,
+      fetchAll('products/'),
+      fetch(`${API_BASE}/categories/`, {
+        headers: authHeaders(),
       }).then((r) => r.json()),
     ])
       .then(([prods, cats]) => {
@@ -66,12 +43,10 @@ function Productos() {
   const handleSave = async (data) => {
     try {
       const resp = await fetch(
-        editing
-          ? `http://192.168.1.52:8000/api/products/${editing.id}/`
-          : 'http://192.168.1.52:8000/api/products/',
+        editing ? `${API_BASE}/products/${editing.id}/` : `${API_BASE}/products/`,
         {
           method: editing ? 'PUT' : 'POST',
-          headers: authHeaders,
+          headers: authHeaders(),
           body: data,
         }
       )
@@ -87,10 +62,10 @@ function Productos() {
   const handleDelete = async (product) => {
     if (!window.confirm('¿Eliminar producto?')) return
     try {
-      const resp = await fetch(
-        `http://192.168.1.52:8000/api/products/${product.id}/`,
-        { method: 'DELETE', headers: authHeaders }
-      )
+        const resp = await fetch(
+          `${API_BASE}/products/${product.id}/`,
+          { method: 'DELETE', headers: authHeaders() }
+        )
       if (!resp.ok) throw new Error('Error al eliminar')
       fetchData()
     } catch (err) {

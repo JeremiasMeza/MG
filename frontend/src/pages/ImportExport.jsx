@@ -1,13 +1,13 @@
 import { useState } from 'react'
+import { API_BASE, authHeaders } from '../api.js'
 
 function ImportExport() {
-  const token = localStorage.getItem('access')
-  const headers = { Authorization: `Bearer ${token}` }
+  const headers = authHeaders()
   const [file, setFile] = useState(null)
   const [isUploading, setUploading] = useState(false)
 
   const handleExport = async () => {
-    const resp = await fetch('http://192.168.1.52:8000/api/import-export/', { headers })
+    const resp = await fetch(`${API_BASE}/import-export/`, { headers })
     const blob = await resp.blob()
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -24,7 +24,7 @@ function ImportExport() {
     const form = new FormData()
     form.append('file', file)
     try {
-      const resp = await fetch('http://192.168.1.52:8000/api/import-export/', {
+      const resp = await fetch(`${API_BASE}/import-export/`, {
         method: 'POST',
         headers,
         body: form,
