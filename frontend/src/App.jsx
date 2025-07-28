@@ -111,7 +111,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout user={user} onLogout={handleLogout} />}>
+        <Route element={<Layout user={user} onLogout={handleLogout} />}> 
+          <Route index element={<Navigate to="/dashboard" replace />} />
           <Route
             path="/dashboard"
             element={
@@ -174,7 +175,7 @@ function App() {
               </RequireSuperuser>
             }
           />
-          <Route path="*" element={<Navigate to="/inventario" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>
