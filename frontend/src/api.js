@@ -1,5 +1,6 @@
+const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost'
 export const API_BASE =
-  import.meta.env.VITE_API_BASE || 'http://localhost:8000/api'
+  import.meta.env.VITE_API_BASE || `http://${host}:8000/api`
 
 export function authHeaders() {
   const token = localStorage.getItem('access')
