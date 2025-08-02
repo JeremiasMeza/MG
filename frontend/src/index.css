@@ -1,1 +1,15 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+/* Scale the base font size with viewport width so layouts designed for
+   1920px wide screens scale proportionally on smaller resolutions.
+   1920 / 16 = 120, so 1rem equals 16px at 1920px width. */
+html {
+  font-size: calc(100vw / 120);
+}
+
+/* Prevent the layout from growing larger than the original design. */
+@media (min-width: 1920px) {
+  html {
+    font-size: 16px;
+  }
+}
