@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const ACCESS_USER = 'superadmin'
-const ACCESS_PASS = 'superadmin123'
+const ACCESS_USER = import.meta.env.VITE_ACCESS_USER
+const ACCESS_PASS = import.meta.env.VITE_ACCESS_PASS
+
 
 function RegisterAccess() {
   const [username, setUsername] = useState('')
