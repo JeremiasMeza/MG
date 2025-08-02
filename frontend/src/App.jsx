@@ -15,6 +15,8 @@ import FinancialReports from './pages/FinancialReports.jsx'
 import Quotes from './pages/Quotes.jsx'
 import Users from './pages/Users.jsx'
 import ImportExport from './pages/ImportExport.jsx'
+import RegisterAccess from './pages/RegisterAccess.jsx'
+import RegisterSuperAdmin from './pages/RegisterSuperAdmin.jsx'
 
 function RequireSuperuser({ children, user }) {
   if (!user?.is_superuser) {
@@ -102,9 +104,14 @@ function App() {
 
   if (!token) {
     return (
-      <div className="">
-        <Login onSuccess={handleLogin} />
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login onSuccess={handleLogin} />} />
+          <Route path="/register-access" element={<RegisterAccess />} />
+          <Route path="/register-superadmin" element={<RegisterSuperAdmin />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
     )
   }
 

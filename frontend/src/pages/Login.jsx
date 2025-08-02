@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { API_BASE } from '../api.js'
 
 function Login({ onSuccess }) {
@@ -6,6 +7,7 @@ function Login({ onSuccess }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -106,6 +108,16 @@ function Login({ onSuccess }) {
               )}
             </button>
           </form>
+
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => navigate('/register-access')}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Registrar Super Admin
+            </button>
+          </div>
 
           {/* Footer */}
           <div className="mt-8 text-center">
