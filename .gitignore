@@ -1,10 +1,9 @@
 Backend/venv/
 __pycache__/
 *.py[cod]
-*.sqlite3
 **/venv/
 .vscode/
-Backend/.env
+
 media/
-frontend/.env
-inicializar.bat
+
+
