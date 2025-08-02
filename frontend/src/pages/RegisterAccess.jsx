@@ -14,6 +14,7 @@ function RegisterAccess() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (username === ACCESS_USER && password === ACCESS_PASS) {
+      sessionStorage.setItem('registerAccess', 'true')
       navigate('/register-superadmin')
     } else {
       setError('Credenciales incorrectas')
