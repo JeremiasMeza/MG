@@ -3,6 +3,8 @@ from core.models import Sale
 from core.serializers.sales import SaleSerializer
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiParameter
+
 
 @extend_schema(tags=["Ventas"])
 class SaleViewSet(viewsets.ModelViewSet):
