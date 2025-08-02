@@ -7,3 +7,6 @@ __pycache__/
 media/
 
 
+bd/db.sqlite3
+frontend/vite.config.js
+
