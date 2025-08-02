@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_BASE } from '../api.js'
 
@@ -7,6 +7,16 @@ function RegisterSuperAdmin() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (sessionStorage.getItem('registerAccess') !== 'true') {
+      navigate('/register-access', { replace: true })
+    }
+  }, [navigate])
+
+  useEffect(() => {
+    return () => sessionStorage.removeItem('registerAccess')
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
