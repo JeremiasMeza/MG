@@ -36,7 +36,10 @@ function Productos() {
 
   const filtered = products.filter(
     (p) =>
-      p.name.toLowerCase().includes(query.toLowerCase()) &&
+      (
+        p.name.toLowerCase().includes(query.toLowerCase()) ||
+        (p.barcode || '').toLowerCase().includes(query.toLowerCase())
+      ) &&
       (categoryFilter === '' || p.category === parseInt(categoryFilter)) &&
       (!onlyLow || p.stock <= p.stock_minimum)
   )
@@ -118,7 +121,7 @@ function Productos() {
                     <div className="relative">
                       <input
                         type="text"
-                        placeholder="Buscar por nombre..."
+                        placeholder="Buscar por nombre o código de barras..."
                         className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm text-sm"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
