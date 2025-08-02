@@ -94,7 +94,6 @@ function Cotizaciones() {
       alert('Debe ingresar nombre y RUT del cliente')
       return
     }
-    const token = localStorage.getItem('access')
     const payload = {
       ...quoteInfo,
       details: cart.map((item) => ({ product_id: item.id, quantity: item.quantity })),

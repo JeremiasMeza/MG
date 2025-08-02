@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { fetchAll, API_BASE, authHeaders } from '../api.js'
+import { fetchAll, API_BASE } from '../api.js'
 import useSaleDetails from '../hooks/useSaleDetails.js'
 import SaleDetailsModal from '../components/SaleDetailsModal.jsx'
 

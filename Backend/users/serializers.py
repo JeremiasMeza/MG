@@ -40,14 +40,25 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'role']
 
     def create(self, validated_data):
+        """Create a regular user or a superuser based on role."""
         role = validated_data.pop('role', 'recepcionist')
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email'),
-            password=validated_data['password']
-        )
-        user.role = role
-        user.save()
+
+        if role == 'admin':
+            # Use Django's create_superuser to ensure proper flags are set
+            user = User.objects.create_superuser(
+                username=validated_data['username'],
+                email=validated_data.get('email'),
+                password=validated_data['password'],
+            )
+        else:
+            user = User.objects.create_user(
+                username=validated_data['username'],
+                email=validated_data.get('email'),
+                password=validated_data['password'],
+            )
+            user.role = role
+            user.save()
+
         return user
 
 

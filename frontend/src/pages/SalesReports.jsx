@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import DataTable from '@components/DataTable.jsx'
-import { fetchAll, API_BASE, authHeaders } from '../api.js'
+import { fetchAll } from '../api.js'
 import useSaleDetails from '../hooks/useSaleDetails.js'
 import SaleDetailsModal from '../components/SaleDetailsModal.jsx'
 
@@ -11,7 +11,6 @@ function ReportesVentas() {
   const [endDate, setEndDate] = useState(today)
   const [sales, setSales] = useState([])
   const [products, setProducts] = useState([])
-  const [users, setUsers] = useState([])
   const [prodFilter, setProdFilter] = useState('')
 
   const [loading, setLoading] = useState(false)
@@ -24,14 +23,12 @@ function ReportesVentas() {
 
   const loadData = async () => {
     setLoading(true)
-    const [salesData, productsData, usersData] = await Promise.all([
+    const [salesData, productsData] = await Promise.all([
       fetchAll('sales/'),
       fetchAll('products/'),
-      fetchAll('users/')
     ])
     setSales(salesData)
     setProducts(productsData)
-    setUsers(usersData)
     setLoading(false)
   }
 

@@ -2,15 +2,6 @@
 function ReceiptModal({ open, onClose, pdfUrl }) {
   if (!open) return null
 
-  const handlePrint = () => {
-    const win = window.open(pdfUrl, '_blank')
-    if (win) {
-      win.addEventListener('load', () => {
-        win.print()
-      })
-    }
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white rounded-xl shadow-2xl w-[32rem] flex flex-col overflow-hidden">
