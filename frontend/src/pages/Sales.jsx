@@ -107,10 +107,15 @@ function Ventas() {
         body: JSON.stringify(payload),
       })
       if (!resp.ok) throw new Error('Error al registrar venta')
+      // El backend devuelve el objeto de la venta creada; usamos su id
+      // directamente para solicitar la boleta.
       const data = await resp.json()
+      const saleId = data.id
+
       setCart([])
       setQtyMap({})
-      const pdfResp = await fetch(`${API_BASE}/sales/${data.id}/export/`, {
+
+      const pdfResp = await fetch(`${API_BASE}/sales/${saleId}/export/`, {
         headers: authHeaders(),
       })
       if (!pdfResp.ok) throw new Error('Error al generar boleta')
