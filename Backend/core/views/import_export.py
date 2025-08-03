@@ -50,7 +50,12 @@ class ProductImportExportView(APIView):
         file = request.FILES.get('file')
         if not file:
             return Response({'error': 'No file provided'}, status=400)
-        decoded = file.read().decode('utf-8').splitlines()
+        data = file.read()
+        try:
+            decoded = data.decode('utf-8')
+        except UnicodeDecodeError:
+            decoded = data.decode('latin-1')
+        decoded = decoded.splitlines()
         reader = csv.DictReader(decoded)
         created = 0
         for row in reader:
